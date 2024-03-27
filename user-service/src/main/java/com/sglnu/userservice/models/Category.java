@@ -10,32 +10,25 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
 import java.util.List;
 
-@AllArgsConstructor
-@Data
+@NoArgsConstructor
 @Entity
 @Getter
 @Setter
 @Table(name = "categories")
-public class Categories {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private BigInteger id;
     @Column(name = "name")
     private String name;
-
-    public Categories() {
-
-    }
 
     @ManyToMany
     @JoinTable(name = "user_categories",

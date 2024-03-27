@@ -10,22 +10,21 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 
-@AllArgsConstructor
-@Data
+@NoArgsConstructor
 @Entity
 @Getter
 @Setter
 @Table(name = "events")
 public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
@@ -43,10 +42,6 @@ public class Event {
     private BigInteger created_at;
     @Column(name = "updated_at")
     private BigInteger updated_at;
-
-    public Event() {
-
-    }
 
     @ManyToMany
     @JoinTable(name = "user_events",

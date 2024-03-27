@@ -8,24 +8,22 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
-@Data
+@NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private BigInteger id;
     @Column(name = "first_name")
     private String firstName;
@@ -48,13 +46,10 @@ public class User {
     @Column(name = "updated_at")
     private BigInteger updated_at;
 
-    public User() {
-
-    }
     @ManyToMany(mappedBy = "users")
     private List<Event> events;
 
     @ManyToMany(mappedBy = "users")//Category
-    private List<Categories> categories;
+    private List<Category> categories;
 
 }
