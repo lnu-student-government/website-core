@@ -8,11 +8,13 @@ create table users
     faculty      varchar   not null,
     group_name   varchar   not null,
     phone_number varchar   not null,
+    avatar_id    bigint,
     created_at   timestamp not null,
     updated_at   timestamp not null,
 
     constraint users_pk primary key (id),
-    constraint users_email_key unique (email)
+    constraint users_email_key unique (email),
+    constraint avatar_id_fk foreign key (avatar_id) references files (id) on update cascade on delete set null
 );
 
 create table events
@@ -22,10 +24,12 @@ create table events
     description varchar   not null,
     datetime    timestamp not null,
     location    varchar   not null,
+    photo_id    bigint,
     created_at  timestamp not null,
     updated_at  timestamp not null,
 
-    constraint events_pk primary key (id)
+    constraint events_pk primary key (id),
+    constraint events_photo_id_fk foreign key (photo_id) references files (id) on update cascade on delete set null
 );
 
 create table user_events
