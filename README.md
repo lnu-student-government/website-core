@@ -35,3 +35,9 @@ For pull requests, please use the naming convention outlined below:
 - **task-id [Name Surname] pull-request-name**
 
 This consistency in naming facilitates the review process and helps in the efficient management of pull requests.
+
+### 5. Task Board
+
+All tasks and their current status can be found on our GitHub Projects board. This board is the go-to place for picking up new tasks, tracking progress, and checking what needs to be done. Make sure to check it regularly to stay updated on the project's needs and progress.
+
+- **[View Our Task Board](https://github.com/orgs/lnu-student-government/projects/1)**
