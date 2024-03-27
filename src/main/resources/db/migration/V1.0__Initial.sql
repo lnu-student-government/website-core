@@ -41,7 +41,7 @@ create table user_events
 
 create table categories
 (
-    id bigint generated always as identity,
+    id   bigint generated always as identity,
     name varchar not null,
 
     constraint categories_pk primary key (id),
@@ -72,3 +72,21 @@ create table feedback
     constraint feedback_event_id_fk foreign key (event_id) references events (id),
     constraint feedback_user_id_fk foreign key (user_id) references users (id)
 );
+
+create table files
+(
+    id            bigint generated always as identity,
+    name          varchar   not null,
+    owner_id      bigint    not null,
+    created_at    timestamp not null,
+    type          varchar   not null,
+    target_type   varchar   not null,
+    target_id     bigint    not null,
+    status        varchar   not null,
+    deletion_date date,
+
+    constraint files_pk primary key (id),
+    constraint files_name_key unique (name),
+    constraint files_owner_id_fk foreign key (owner_id) references users (id)
+);
+
