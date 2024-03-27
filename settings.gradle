@@ -1,1 +1,6 @@
 rootProject.name = 'website-core'
+
+include 'core'
+include 'file-service'
+include 'event-service'
+include 'user-service'
