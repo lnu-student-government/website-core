@@ -93,7 +93,7 @@ create table files
 );
 
 alter table users
-    add constraint avatar_id_fk foreign key (avatar_id) references files (id) on update cascade on delete set null;
+    add constraint users_avatar_id_fk foreign key (avatar_id) references files (id) on update cascade on delete set null;
 
 alter table events
     add constraint events_photo_id_fk foreign key (photo_id) references files (id) on update cascade on delete set null;
