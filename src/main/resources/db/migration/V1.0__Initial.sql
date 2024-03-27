@@ -13,8 +13,7 @@ create table users
     updated_at   timestamp not null,
 
     constraint users_pk primary key (id),
-    constraint users_email_key unique (email),
-    constraint avatar_id_fk foreign key (avatar_id) references files (id) on update cascade on delete set null
+    constraint users_email_key unique (email)
 );
 
 create table events
@@ -28,8 +27,7 @@ create table events
     created_at  timestamp not null,
     updated_at  timestamp not null,
 
-    constraint events_pk primary key (id),
-    constraint events_photo_id_fk foreign key (photo_id) references files (id) on update cascade on delete set null
+    constraint events_pk primary key (id)
 );
 
 create table user_events
@@ -94,3 +92,8 @@ create table files
     constraint files_owner_id_fk foreign key (owner_id) references users (id)
 );
 
+alter table users
+    add constraint avatar_id_fk foreign key (avatar_id) references files (id) on update cascade on delete set null;
+
+alter table events
+    add constraint events_photo_id_fk foreign key (photo_id) references files (id) on update cascade on delete set null;
