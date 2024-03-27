@@ -6,7 +6,7 @@ spring:
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
-    password: actual_password_kekw
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
