@@ -42,4 +42,5 @@ public class Categories {
             joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")) //users
     private List<User> users;
+
 }

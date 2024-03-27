@@ -41,7 +41,9 @@ public class Feedback {
     private boolean receivePhotos;
     @Column(name = "comment")
     private String comment;
+
     public Feedback() {
 
     }
+
 }

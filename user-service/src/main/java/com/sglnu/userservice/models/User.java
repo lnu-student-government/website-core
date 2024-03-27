@@ -56,4 +56,5 @@ public class User {
 
     @ManyToMany(mappedBy = "users")//Category
     private List<Categories> categories;
+
 }
