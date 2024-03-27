@@ -1,1 +1,9 @@
-spring.application.name=website-core
+spring:
+  profiles:
+    active:
+  application:
+    name: website-core
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
