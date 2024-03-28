@@ -26,13 +26,11 @@ public class Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
-    @Column(name = "visited")
+    private Long id;
+    private String comment;
     private boolean visited;
     @Column(name = "receive_photos")
     private boolean receivePhotos;
-    @Column(name = "comment")
-    private String comment;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

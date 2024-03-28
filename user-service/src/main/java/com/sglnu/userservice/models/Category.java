@@ -26,8 +26,7 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
-    @Column(name = "name")
+    private Long id;
     private String name;
 
     @ManyToMany
