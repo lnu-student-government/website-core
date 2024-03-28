@@ -29,7 +29,6 @@ public class Feedback {
     private Long id;
     private String comment;
     private boolean visited;
-    @Column(name = "receive_photos")
     private boolean receivePhotos;
 
     @ManyToOne

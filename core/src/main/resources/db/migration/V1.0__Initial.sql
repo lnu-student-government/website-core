@@ -21,7 +21,7 @@ create table events
     id          bigint generated always as identity,
     name        varchar   not null,
     description varchar   not null,
-    datetime    timestamp not null,
+    date    timestamp not null,
     location    varchar   not null,
     photo_id    bigint,
     created_at  timestamp not null,

@@ -37,15 +37,11 @@ public class Event {
     private String name;
     private String description;
     private String location;
-    @Column(name = "datetime")
-    private LocalDate dateTime;
-    @Column(name = "photo_id")
+    private LocalDate date;
     private Long photoId;
 
-    @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
-    @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
 

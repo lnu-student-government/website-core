@@ -13,13 +13,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.sound.sampled.AudioFileFormat;
-import java.math.BigInteger;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,21 +33,14 @@ public class User {
     private String email;
     private String password;
     private String faculty;
-    @Column(name = "first_name")
     private String firstName;
-    @Column(name = "last_name")
     private String lastName;
-    @Column(name = "group_name")
     private String groupName;
-    @Column(name = "phone_number")
     private String phoneNumber;
-    @Column(name = "avatar_id")
     private Long avatarId;
 
-    @Column(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
-    @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
