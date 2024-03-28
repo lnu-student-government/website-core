@@ -66,14 +66,34 @@ create table feedback
     id             bigint generated always as identity,
     user_id        bigint  not null,
     event_id       bigint  not null,
-    visited        boolean not null,
-    receive_photos boolean not null,
-    comment        varchar not null,
 
     constraint feedback_pk primary key (id),
     constraint feedback_event_id_fk foreign key (event_id) references events (id),
     constraint feedback_user_id_fk foreign key (user_id) references users (id)
 );
+
+create table feedback_questions
+(
+    id          bigint generated always as identity,
+    feedback_id bigint not null,
+    question_id bigint not null,
+    answer      varchar not null,
+
+    constraint feedback_questions_pk primary key (id),
+    constraint feedback_questions_feedback_id_fk foreign key (feedback_id) references feedback (id),
+    constraint feedback_questions_question_id_fk foreign key (question_id) references question (id)
+);
+
+
+create table question
+(
+    id  bigint generated always as identity,
+    name varchar not null,
+    type varchar not null,
+
+    constraint question_pk primary key (id)
+);
+
 
 create table files
 (
