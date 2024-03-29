@@ -49,6 +49,6 @@ public class User {
     @ManyToMany(mappedBy = "users")//Category
     private List<Category> categories;
 
-    @OneToMany(mappedBy = "feedback")
+    @OneToMany(mappedBy = "userId")
     private List<Feedback> feedbacks;
 }
