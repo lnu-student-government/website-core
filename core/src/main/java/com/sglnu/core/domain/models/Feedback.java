@@ -1,9 +1,7 @@
 
-package com.sglnu.eventservice.models;
+package com.sglnu.core.domain.models;
 
 
-import com.sglnu.userservice.models.User;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,8 +12,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigInteger;
 
 @NoArgsConstructor
 @Entity
@@ -28,8 +24,8 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String comment;
-    private boolean visited;
-    private boolean receivePhotos;
+    private Boolean visited;
+    private Boolean receivePhotos;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

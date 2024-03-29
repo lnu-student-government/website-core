@@ -1,12 +1,14 @@
-package com.sglnu.userservice.models;
+package com.sglnu.core.domain.models;
 
-import com.sglnu.eventservice.models.Event;
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -16,38 +18,36 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)
-@Entity
 @NoArgsConstructor
+@Entity
 @Getter
 @Setter
-@Table(name = "users")
-public class User {
+@Table(name = "events")
+public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String email;
-    private String password;
-    private String faculty;
-    private String firstName;
-    private String lastName;
-    private String groupName;
-    private String phoneNumber;
-    private Long avatarId;
+    private String name;
+    private String description;
+    private String location;
+    private Long photoId;
+    private LocalDateTime date;
 
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @ManyToMany(mappedBy = "users")
-    private List<Event> events;
-
-    @ManyToMany(mappedBy = "users")//Category
-    private List<Category> categories;
+    @ManyToMany
+    @JoinTable(name = "user_events",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> users;
 
 }
