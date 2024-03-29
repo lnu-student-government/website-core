@@ -1,18 +1,9 @@
-spring:
-  profiles:
-    active:
-  application:
-    name: website-core
-  datasource:
-    url: jdbc:postgresql://localhost:6969/coredb
-    username: root
-    password: root
-  jpa:
-    hibernate:
-      ddl-auto: validate
-
-
-
-#    url: ${DB_URL}
-#    username: ${DB_USER}
-#    password: ${DB_PASSWORD}
+application:
+  name: website-core
+datasource:
+  url: ${DB_URL}
+  username: ${DB_USER}
+  password: ${DB_PASSWORD}
+jpa:
+  hibernate:
+    ddl-auto: validate
