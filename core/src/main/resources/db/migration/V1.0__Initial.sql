@@ -50,6 +50,17 @@ create table categories
     constraint categories_name_key unique (name)
 );
 
+create table event_categories
+(
+    id          bigint generated always as identity,
+    event_id    bigint not null,
+    category_id bigint not null,
+
+    constraint event_categories_pk primary key (id),
+    constraint event_categories_category_id_fk foreign key (category_id) references categories (id) on update cascade on delete cascade,
+    constraint event_categories_event_id_fk foreign key (event_id) references events (id) on update cascade on delete cascade
+);
+
 create table user_categories
 (
     id          bigint generated always as identity,
