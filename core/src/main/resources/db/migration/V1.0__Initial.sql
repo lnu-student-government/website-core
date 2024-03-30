@@ -83,6 +83,15 @@ create table feedback
     constraint feedback_user_id_fk foreign key (user_id) references users (id)
 );
 
+create table question
+(
+    id  bigint generated always as identity,
+    name varchar not null,
+    type varchar not null,
+
+    constraint question_pk primary key (id)
+);
+
 create table feedback_questions
 (
     id          bigint generated always as identity,
@@ -94,17 +103,6 @@ create table feedback_questions
     constraint feedback_questions_feedback_id_fk foreign key (feedback_id) references feedback (id),
     constraint feedback_questions_question_id_fk foreign key (question_id) references question (id)
 );
-
-
-create table question
-(
-    id  bigint generated always as identity,
-    name varchar not null,
-    type varchar not null,
-
-    constraint question_pk primary key (id)
-);
-
 
 create table files
 (
