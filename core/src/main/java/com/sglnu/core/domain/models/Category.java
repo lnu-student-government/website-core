@@ -33,4 +33,7 @@ public class Category {
             inverseJoinColumns = @JoinColumn(name = "user_id")) //users
     private List<User> users;
 
+    @ManyToMany(mappedBy = "categories")
+    private List<Event> events;
+
 }

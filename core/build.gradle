@@ -2,7 +2,6 @@ dependencies {
     implementation project(':user-service')
     implementation project(':file-service')
     implementation project(':event-service')
-    implementation 'org.springframework.data:spring-data-jpa'
 }
 tasks.named('test') {
     useJUnitPlatform()
