@@ -50,6 +50,17 @@ create table categories
     constraint categories_name_key unique (name)
 );
 
+create table event_categories
+(
+    id          bigint generated always as identity,
+    event_id    bigint not null,
+    category_id bigint not null,
+
+    constraint event_categories_pk primary key (id),
+    constraint event_categories_category_id_fk foreign key (category_id) references categories (id) on update cascade on delete cascade,
+    constraint event_categories_event_id_fk foreign key (event_id) references events (id) on update cascade on delete cascade
+);
+
 create table user_categories
 (
     id          bigint generated always as identity,
@@ -66,14 +77,34 @@ create table feedback
     id             bigint generated always as identity,
     user_id        bigint  not null,
     event_id       bigint  not null,
-    visited        boolean not null,
-    receive_photos boolean not null,
-    comment        varchar not null,
 
     constraint feedback_pk primary key (id),
     constraint feedback_event_id_fk foreign key (event_id) references events (id),
     constraint feedback_user_id_fk foreign key (user_id) references users (id)
 );
+
+create table feedback_questions
+(
+    id          bigint generated always as identity,
+    feedback_id bigint not null,
+    question_id bigint not null,
+    answer      varchar not null,
+
+    constraint feedback_questions_pk primary key (id),
+    constraint feedback_questions_feedback_id_fk foreign key (feedback_id) references feedback (id),
+    constraint feedback_questions_question_id_fk foreign key (question_id) references question (id)
+);
+
+
+create table question
+(
+    id  bigint generated always as identity,
+    name varchar not null,
+    type varchar not null,
+
+    constraint question_pk primary key (id)
+);
+
 
 create table files
 (
