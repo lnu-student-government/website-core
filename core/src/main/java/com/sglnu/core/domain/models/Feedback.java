@@ -37,4 +37,5 @@ public class Feedback {
 
     @ManyToMany(mappedBy = "feedbacks")
     private List<Question> questions;
+
 }
