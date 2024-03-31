@@ -23,9 +23,6 @@ public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String comment;
-    private Boolean visited;
-    private Boolean receivePhotos;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
