@@ -91,17 +91,26 @@ create table question
 
     constraint question_pk primary key (id)
 );
-
-create table feedback_questions
+create table event_questions
 (
     id          bigint generated always as identity,
-    feedback_id bigint not null,
+    event_id bigint not null,
     question_id bigint not null,
-    answer      varchar not null,
 
     constraint feedback_questions_pk primary key (id),
-    constraint feedback_questions_feedback_id_fk foreign key (feedback_id) references feedback (id),
+    constraint feedback_questions_feedback_id_fk foreign key (event_id) references events (id),
     constraint feedback_questions_question_id_fk foreign key (question_id) references question (id)
+);
+create table event_questions_feedback
+(
+    id          bigint generated always as identity,
+    event_question_id bigint not null,
+    feedback_id bigint not null,
+    answer varchar not null,
+
+    constraint feedback_questions_pk primary key (id),
+    constraint feedback_questions_feedback_id_fk foreign key (event_question_id) references event_questions (id),
+    constraint feedback_questions_question_id_fk foreign key (feedback_id) references feedback (id)
 );
 
 create table files
