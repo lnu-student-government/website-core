@@ -36,6 +36,6 @@ public class Feedback {
     private Event eventId;
 
     @ManyToMany(mappedBy = "feedbacks")
-    private List<Question> questions;
+    private List<EventQuestion> eventQuestions;
 
 }
