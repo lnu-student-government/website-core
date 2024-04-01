@@ -97,9 +97,9 @@ create table event_questions
     event_id bigint not null,
     question_id bigint not null,
 
-    constraint feedback_questions_pk primary key (id),
-    constraint feedback_questions_feedback_id_fk foreign key (event_id) references events (id),
-    constraint feedback_questions_question_id_fk foreign key (question_id) references question (id)
+    constraint event_questions_pk primary key (id),
+    constraint event_questions_event_id_fk foreign key (event_id) references events (id),
+    constraint event_questions_question_id_fk foreign key (question_id) references question (id)
 );
 create table event_questions_feedback
 (
@@ -108,9 +108,9 @@ create table event_questions_feedback
     feedback_id bigint not null,
     answer varchar not null,
 
-    constraint feedback_questions_pk primary key (id),
-    constraint feedback_questions_feedback_id_fk foreign key (event_question_id) references event_questions (id),
-    constraint feedback_questions_question_id_fk foreign key (feedback_id) references feedback (id)
+    constraint event_questions_feedback_pk primary key (id),
+    constraint event_questions_id_fk foreign key (event_question_id) references event_questions (id),
+    constraint feedback_id_fk foreign key (feedback_id) references feedback (id)
 );
 
 create table files
