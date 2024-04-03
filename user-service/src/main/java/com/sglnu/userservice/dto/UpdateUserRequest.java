@@ -1,17 +1,32 @@
 package com.sglnu.userservice.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
+
+import static com.sglnu.userservice.dto.UserRequest.EMAIL_REGEX;
 
 @Data
 @Builder
 public class UpdateUserRequest {
 
-    private static final String EMAIL_REGEX =
-            "[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})";
+    private String faculty;
 
-    @Pattern(regexp = EMAIL_REGEX, message = "Email has to be in a valid format!")
-    private String email;
+    @Pattern(regexp = "[A-Z][a-z]+",
+            message = "Must start with a capital letter")
+    private String firstName;
+
+    @Pattern(regexp = "[A-Z][a-z]+",
+            message = "Must start with a capital letter")
+    private String lastName;
+
+    private String groupName;
+
+    @Pattern(regexp = UserRequest.PHONE_NUMBER_REGEX,
+            message = "Phone number has to be in a valid format!")
+    private String phoneNumber;
+
+    private Long avatarId;
 
 }

@@ -1,6 +1,7 @@
 package com.sglnu.userservice.mapper;
 
 import com.sglnu.core.domain.models.User;
+import com.sglnu.userservice.dto.RegisterRequest;
 import com.sglnu.userservice.dto.UpdateUserRequest;
 import com.sglnu.userservice.dto.UserRequest;
 import com.sglnu.userservice.dto.UserResponse;
@@ -15,6 +16,8 @@ import org.mapstruct.ReportingPolicy;
 public interface UserMapper {
 
     User mapToUser(UserRequest request);
+
+    User mapToUser(RegisterRequest request);
 
     UserResponse mapToUserResponse(User newUser);
 

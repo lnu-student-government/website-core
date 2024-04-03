@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredicateExecutor<User> {
 
-    boolean existsByEmailIgnoreCase(String username);
+    boolean existByPhoneNumber(String username);
+
+    boolean existsByEmailIgnoreCase(String email);
 
 }

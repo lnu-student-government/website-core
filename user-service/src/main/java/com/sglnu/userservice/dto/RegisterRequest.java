@@ -7,20 +7,11 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import static com.sglnu.userservice.dto.UserRequest.*;
 
 @Data
 @Builder
-public class UserRequest {
-
-    public static final String EMAIL_REGEX =
-            "[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})";
-
-    public static final String PHONE_NUMBER_REGEX =
-            "^(\\+\\d{1,3})?[- .]?(\\(\\d{1,3}\\)|\\d{1,3})[- .]?\\d{3,4}[- .]?\\d{4}$";
-
-    public static final String PASSWORD_REGEX =
-            "(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])[A-Za-z\\d]{8,}";
+public class RegisterRequest {
 
     @NotBlank(message = "Email cannot be empty!")
     @Email(regexp = EMAIL_REGEX, flags = Pattern.Flag.CASE_INSENSITIVE, message = "Email has to be in a valid format!")
@@ -50,11 +41,5 @@ public class UserRequest {
     @Pattern(regexp = PHONE_NUMBER_REGEX,
             message = "Phone number has to be in a valid format!")
     private String phoneNumber;
-
-    private Long avatarId;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
 }

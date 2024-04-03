@@ -1,17 +1,21 @@
 package com.sglnu.userservice.exception;
 
+import com.sglnu.userservice.dto.RegisterRequest;
+import com.sglnu.userservice.dto.UpdateUserRequest;
 import lombok.Getter;
 
-import java.util.Map;
-
+@Getter
 public class WrongCredentialsException extends RuntimeException{
 
-    @Getter
-    private final Map<String, String> credentials;
-    @Getter
     private final String title;
+    private final Object credentials;
 
-    public WrongCredentialsException(String title, Map<String, String> credentials) {
+    public WrongCredentialsException(String title, RegisterRequest credentials) {
+        this.title = title;
+        this.credentials = credentials;
+    }
+
+    public WrongCredentialsException(String title, UpdateUserRequest credentials) {
         this.title = title;
         this.credentials = credentials;
     }

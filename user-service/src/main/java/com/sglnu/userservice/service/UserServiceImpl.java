@@ -2,9 +2,7 @@ package com.sglnu.userservice.service;
 
 import com.querydsl.core.types.Predicate;
 import com.sglnu.core.domain.models.User;
-import com.sglnu.userservice.dto.UpdateUserRequest;
-import com.sglnu.userservice.dto.UserRequest;
-import com.sglnu.userservice.dto.UserResponse;
+import com.sglnu.userservice.dto.*;
 import com.sglnu.userservice.exception.UserNotFoundException;
 import com.sglnu.userservice.exception.WrongCredentialsException;
 import com.sglnu.userservice.mapper.UserMapper;
@@ -27,10 +25,9 @@ public class UserServiceImpl {
 
 
     @Transactional
-    public UserResponse save(UserRequest request) {
+    public UserResponse save(RegisterRequest request) {
         if (userRepository.existsByEmailIgnoreCase(request.getEmail())) {
-            throw new WrongCredentialsException("Email is already taken!",
-                    Map.of("email", "Email is already taken!"));
+            throw new WrongCredentialsException("Email is already taken!", request);
         }
 
         User newUser = userRepository.save(userMapper.mapToUser(request));
@@ -50,15 +47,21 @@ public class UserServiceImpl {
 
     @Transactional
     public UserResponse update(Long id, UpdateUserRequest request) {
-        User newUser = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        User toUpdateUser = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
-        if (userRepository.existsByEmailIgnoreCase(request.getEmail())) {
-            throw new WrongCredentialsException("Email is already taken!",
-                    Map.of("email", "Email is already taken!"));
+        if (userRepository.existByPhoneNumber(request.getPhoneNumber())) {
+            throw new WrongCredentialsException("Phone number is already taken!", request);
         }
 
-        User savedUser = userRepository.save(userMapper.updateUser(newUser, request));
-        return userMapper.mapToUserResponse(savedUser);
+        toUpdateUser.setFaculty(request.getFaculty());
+        toUpdateUser.setFirstName(request.getFirstName());
+        toUpdateUser.setLastName(request.getLastName());
+        toUpdateUser.setGroupName(request.getGroupName());
+        toUpdateUser.setPhoneNumber(request.getPhoneNumber());
+        toUpdateUser.setAvatarId(request.getAvatarId());
+
+        User newUser = userRepository.save(userMapper.updateUser(toUpdateUser, request));
+        return userMapper.mapToUserResponse(newUser);
     }
 
     @Transactional
