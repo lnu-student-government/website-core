@@ -1,8 +1,0 @@
-dependencies {
-    implementation project(':user-service')
-    implementation project(':file-service')
-    implementation project(':event-service')
-}
-tasks.named('test') {
-    useJUnitPlatform()
-}
