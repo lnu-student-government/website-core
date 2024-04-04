@@ -4,9 +4,35 @@ spring:
   application:
     name: website-core
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:6969/coredb
+    username: root
+    password: root
   jpa:
     hibernate:
       ddl-auto: validate
+  springdoc:
+    api-docs:
+      path: /api-docs
+    swagger-ui:
+      path: /swagger-ui.html
+
+
+
+
+
+
+      #base-path: /user-service #/users
+#    show-actuator: true
+ #   management:
+  #    endpoints:
+   #     web:
+    #      exposure:
+     #       include: swagger-ui
+      #server:
+       # port: 8080
+
+    #    springdoc:
+ #    swagger-ui:
+  #     operationsSorter: method
+   #  api-docs:
+    #   path: /api-docs
