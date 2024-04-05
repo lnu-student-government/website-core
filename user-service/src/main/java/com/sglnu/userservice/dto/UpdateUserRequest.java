@@ -1,11 +1,8 @@
 package com.sglnu.userservice.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
-
-import static com.sglnu.userservice.dto.UserRequest.EMAIL_REGEX;
 
 @Data
 @Builder

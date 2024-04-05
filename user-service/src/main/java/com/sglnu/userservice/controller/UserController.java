@@ -5,16 +5,14 @@ import com.sglnu.core.domain.models.User;
 import com.sglnu.userservice.dto.RegisterRequest;
 import com.sglnu.userservice.dto.UpdateUserRequest;
 import com.sglnu.userservice.dto.UserResponse;
-import com.sglnu.userservice.mapper.UserMapper;
 import com.sglnu.userservice.service.UserServiceImpl;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.models.annotations.OpenAPI31;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
@@ -26,11 +24,11 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-//@OpenAPIDefinition
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-        private final UserServiceImpl userService;
+    @Autowired
+    private final UserServiceImpl userService;
 
     @Operation(summary = "Create a new user")
     @ApiResponses(value = {

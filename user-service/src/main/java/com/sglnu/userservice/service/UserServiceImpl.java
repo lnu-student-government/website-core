@@ -2,7 +2,10 @@ package com.sglnu.userservice.service;
 
 import com.querydsl.core.types.Predicate;
 import com.sglnu.core.domain.models.User;
-import com.sglnu.userservice.dto.*;
+
+import com.sglnu.userservice.dto.RegisterRequest;
+import com.sglnu.userservice.dto.UpdateUserRequest;
+import com.sglnu.userservice.dto.UserResponse;
 import com.sglnu.userservice.exception.UserNotFoundException;
 import com.sglnu.userservice.exception.WrongCredentialsException;
 import com.sglnu.userservice.mapper.UserMapper;
@@ -12,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -33,6 +34,7 @@ public class UserServiceImpl {
         User newUser = userRepository.save(userMapper.mapToUser(request));
         return userMapper.mapToUserResponse(newUser);
     }
+
 
     public UserResponse getById(Long id) {
         return userRepository.findById(id)
