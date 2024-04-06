@@ -1,6 +1,6 @@
 package com.sglnu.userservice.mapper;
 
-import com.sglnu.core.domain.models.User;
+import com.sglnu.commondatamodel.models.User;
 import com.sglnu.userservice.dto.RegisterRequest;
 import com.sglnu.userservice.dto.UpdateUserRequest;
 import com.sglnu.userservice.dto.UserRequest;

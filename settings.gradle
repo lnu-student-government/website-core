@@ -4,3 +4,5 @@ include 'core'
 include 'file-service'
 include 'event-service'
 include 'user-service'
+include 'common-data-model'
+

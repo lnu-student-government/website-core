@@ -1,7 +1,7 @@
 package com.sglnu.userservice.controller;
 
 import com.querydsl.core.types.Predicate;
-import com.sglnu.core.domain.models.User;
+import com.sglnu.commondatamodel.models.User;
 import com.sglnu.userservice.dto.RegisterRequest;
 import com.sglnu.userservice.dto.UpdateUserRequest;
 import com.sglnu.userservice.dto.UserResponse;

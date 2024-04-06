@@ -1,4 +1,4 @@
-package com.sglnu.core.domain.models;
+package com.sglnu.commondatamodel.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

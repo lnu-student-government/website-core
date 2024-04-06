@@ -1,13 +1,14 @@
 
-package com.sglnu.core.domain.models;
+package com.sglnu.commondatamodel.models;
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,21 +20,22 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "categories")
-public class Category {
+@Table(name = "feedback")
+public class Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
 
-    @ManyToMany
-    @JoinTable(name = "user_categories",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")) //users
-    private List<User> users;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User userId;
 
-    @ManyToMany(mappedBy = "categories")
-    private List<Event> events;
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event eventId;
+
+    @ManyToMany(mappedBy = "feedbacks")
+    private List<EventQuestion> eventQuestions;
 
 }

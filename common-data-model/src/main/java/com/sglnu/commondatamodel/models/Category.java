@@ -1,4 +1,5 @@
-package com.sglnu.core.domain.models;
+
+package com.sglnu.commondatamodel.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,13 +19,21 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "question")
-public class Question {
+@Table(name = "categories")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String type;
+
+    @ManyToMany
+    @JoinTable(name = "user_categories",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")) //users
+    private List<User> users;
+
+    @ManyToMany(mappedBy = "categories")
+    private List<Event> events;
 
 }

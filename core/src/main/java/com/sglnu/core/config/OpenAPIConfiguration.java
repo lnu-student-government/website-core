@@ -18,10 +18,10 @@ import java.util.List;
 @Configuration
 public class OpenAPIConfiguration {
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+//    @Bean
+//    public RestTemplate restTemplate() {
+//        return new RestTemplate();
+//    }
 
     @Bean
     public OpenAPI defineOpenApi() {

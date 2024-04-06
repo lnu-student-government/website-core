@@ -1,7 +1,7 @@
 package com.sglnu.userservice.service;
 
 import com.querydsl.core.types.Predicate;
-import com.sglnu.core.domain.models.User;
+import com.sglnu.commondatamodel.models.User;
 
 import com.sglnu.userservice.dto.RegisterRequest;
 import com.sglnu.userservice.dto.UpdateUserRequest;
@@ -12,10 +12,12 @@ import com.sglnu.userservice.mapper.UserMapper;
 import com.sglnu.userservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+@ComponentScan("com.sglnu.userservice")
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl {
