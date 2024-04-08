@@ -1,4 +1,4 @@
-package com.sglnu.userservice.dto;
+package com.sglnu.commondatamodel.userdto;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
 
-import static com.sglnu.userservice.dto.UserRequest.*;
+import static com.sglnu.commondatamodel.userdto.UserRequest.*;
 
 @Data
 @Builder

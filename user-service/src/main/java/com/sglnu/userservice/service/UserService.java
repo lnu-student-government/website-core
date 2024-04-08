@@ -1,9 +1,9 @@
 package com.sglnu.userservice.service;
 
 import com.querydsl.core.types.Predicate;
-import com.sglnu.userservice.dto.UpdateUserRequest;
-import com.sglnu.userservice.dto.UserRequest;
-import com.sglnu.userservice.dto.UserResponse;
+import com.sglnu.commondatamodel.userdto.UpdateUserRequest;
+import com.sglnu.commondatamodel.userdto.UserRequest;
+import com.sglnu.commondatamodel.userdto.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -1,7 +1,7 @@
 package com.sglnu.userservice.exception;
 
-import com.sglnu.userservice.dto.RegisterRequest;
-import com.sglnu.userservice.dto.UpdateUserRequest;
+import com.sglnu.commondatamodel.userdto.RegisterRequest;
+import com.sglnu.commondatamodel.userdto.UpdateUserRequest;
 import lombok.Getter;
 
 @Getter

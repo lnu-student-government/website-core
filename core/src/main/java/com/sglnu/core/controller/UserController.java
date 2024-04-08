@@ -1,43 +1,68 @@
-//package com.sglnu.core.controller;
-//
-//import com.sglnu.core.domain.models.User;
-//import io.swagger.v3.oas.annotations.Operation;
-//import io.swagger.v3.oas.annotations.responses.ApiResponse;
-//import io.swagger.v3.oas.annotations.responses.ApiResponses;
-//import jakarta.validation.Valid;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.validation.BindingResult;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestBody;
-//import org.springframework.web.bind.annotation.RestController;
-//import org.springframework.web.client.RestTemplate;
-//
-//import java.util.Arrays;
-//import java.util.List;
-//
-//@RestController
-//public class UserController {
-//
-//    @Autowired
-//    private RestTemplate restTemplate;
-//
-//    @GetMapping("/users")
-//    public List<User> getAllUsers() {
-//        String url = "http://localhost:8080/users";
-//        return Arrays.asList(restTemplate.getForObject(url, User[].class));
-//    }
-//
-//    @GetMapping("/users/{id}")
-//    public User getUserById(@PathVariable Long id) {
-//        String url = "http://localhost:8080/users/" + id;
-//        return restTemplate.getForObject(url, User.class);
-//    }
-//
-//    @PostMapping("/registration")
-//    public User create() {
-//        String url = "http://localhost:8080/registration";
-//        return restTemplate.getForObject(url, User.class);
-//    }
-//}
+package com.sglnu.core.controller;
+
+import com.querydsl.core.types.Predicate;
+import com.sglnu.commondatamodel.models.User;
+import com.sglnu.commondatamodel.userdto.RegisterRequest;
+import com.sglnu.commondatamodel.userdto.UpdateUserRequest;
+import com.sglnu.commondatamodel.userdto.UserResponse;
+import com.sglnu.userservice.service.UserServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/v1/users")
+public class UserController {
+
+    private final UserServiceImpl userService;
+
+    public UserController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    @Operation(summary = "Create a new user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid user data")
+    })
+    @PostMapping("/registration")
+        public UserResponse create(@Valid @RequestBody RegisterRequest request, BindingResult result) {
+            if (result.hasErrors()) {
+                log.error("Error creating user: {}", result.getAllErrors());
+                return null;
+            }
+            return userService.save(request);
+        }
+
+        @GetMapping("/{id}")
+        public UserResponse getById(@PathVariable Long id) {
+            return userService.getById(id);
+        }
+
+        @GetMapping
+        public Page<UserResponse> getAll(@PageableDefault Pageable pageable,
+                                         @QuerydslPredicate(root = User.class) Predicate filter) {
+            return userService.getAll(pageable, filter);
+        }
+
+        @PutMapping("/{id}")
+        public UserResponse update(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
+            return userService.update(id, request);
+        }
+
+        @DeleteMapping("/{id}")
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        public void deleteById(@PathVariable Long id) {
+            userService.delete(id);
+        }
+}

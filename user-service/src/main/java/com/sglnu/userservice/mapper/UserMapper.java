@@ -1,10 +1,10 @@
 package com.sglnu.userservice.mapper;
 
 import com.sglnu.commondatamodel.models.User;
-import com.sglnu.userservice.dto.RegisterRequest;
-import com.sglnu.userservice.dto.UpdateUserRequest;
-import com.sglnu.userservice.dto.UserRequest;
-import com.sglnu.userservice.dto.UserResponse;
+import com.sglnu.commondatamodel.userdto.RegisterRequest;
+import com.sglnu.commondatamodel.userdto.UpdateUserRequest;
+import com.sglnu.commondatamodel.userdto.UserRequest;
+import com.sglnu.commondatamodel.userdto.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;

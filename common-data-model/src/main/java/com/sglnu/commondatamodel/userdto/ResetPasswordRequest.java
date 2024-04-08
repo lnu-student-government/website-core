@@ -1,9 +1,9 @@
-package com.sglnu.userservice.dto;
+package com.sglnu.commondatamodel.userdto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-import static com.sglnu.userservice.dto.UserRequest.PASSWORD_REGEX;
+import static com.sglnu.commondatamodel.userdto.UserRequest.PASSWORD_REGEX;
 
 public class ResetPasswordRequest {
 

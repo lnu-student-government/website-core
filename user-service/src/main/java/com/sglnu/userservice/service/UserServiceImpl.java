@@ -3,28 +3,30 @@ package com.sglnu.userservice.service;
 import com.querydsl.core.types.Predicate;
 import com.sglnu.commondatamodel.models.User;
 
-import com.sglnu.userservice.dto.RegisterRequest;
-import com.sglnu.userservice.dto.UpdateUserRequest;
-import com.sglnu.userservice.dto.UserResponse;
+import com.sglnu.commondatamodel.userdto.RegisterRequest;
+import com.sglnu.commondatamodel.userdto.UpdateUserRequest;
+import com.sglnu.commondatamodel.userdto.UserResponse;
 import com.sglnu.userservice.exception.UserNotFoundException;
 import com.sglnu.userservice.exception.WrongCredentialsException;
 import com.sglnu.userservice.mapper.UserMapper;
 import com.sglnu.userservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-@ComponentScan("com.sglnu.userservice")
-@RequiredArgsConstructor
+
 @Service
 public class UserServiceImpl {
 
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
 
 
     @Transactional
@@ -53,7 +55,7 @@ public class UserServiceImpl {
     public UserResponse update(Long id, UpdateUserRequest request) {
         User toUpdateUser = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
-        if (userRepository.existByPhoneNumber(request.getPhoneNumber())) {
+        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
             throw new WrongCredentialsException("Phone number is already taken!", request);
         }
 

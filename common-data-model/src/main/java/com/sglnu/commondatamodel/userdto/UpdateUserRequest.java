@@ -1,4 +1,4 @@
-package com.sglnu.userservice.dto;
+package com.sglnu.commondatamodel.userdto;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;

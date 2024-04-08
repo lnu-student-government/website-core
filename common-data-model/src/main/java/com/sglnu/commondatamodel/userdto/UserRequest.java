@@ -1,4 +1,4 @@
-package com.sglnu.userservice.dto;
+package com.sglnu.commondatamodel.userdto;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
