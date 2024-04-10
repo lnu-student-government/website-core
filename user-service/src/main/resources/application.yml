@@ -1,0 +1,26 @@
+server:
+  port: ${PORT:9000}
+
+spring:
+  application:
+    name: user-service
+  profiles:
+    active:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:6969/coredb}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    default-schema: user-service
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:${EUREKA_PORT:8761}/eureka
+    registerWithEureka: true
+    fetchRegistry: true
+  instance:
+    preferIpAddress: true
