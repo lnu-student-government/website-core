@@ -21,7 +21,8 @@ group = 'org.sglnu'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '21'
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 configurations {
@@ -37,6 +38,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     implementation 'org.flywaydb:flyway-core'
+
+    implementation 'org.springframework.security:spring-security-core:6.2.1'
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.2.1'
+    implementation 'org.springframework.security:spring-security-config:6.2.1'
+
 
     implementation "org.mapstruct:mapstruct:${mapStructVersion}"
     implementation "com.querydsl:querydsl-core:${queryDslVersion}"

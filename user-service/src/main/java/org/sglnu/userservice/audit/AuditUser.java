@@ -1,10 +1,8 @@
-package org.sglnu.userservice.domain;
+package org.sglnu.userservice.audit;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,7 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.sglnu.userservice.common.Faculty;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,35 +20,28 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
-@EntityListeners(AuditingEntityListener.class)
+@Table(name = "audit_user")
 @Getter
 @Setter
-@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
-public class User {
+@NoArgsConstructor
+public class AuditUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    @Enumerated(EnumType.STRING)
-    private Faculty faculty;
-    private String groupName;
-    private String phoneNumber;
-    private Long avatarId;
-
+    @CreatedBy
     private String createdBy;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String updatedBy;
 
-    @Column(name = "user_role")
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    @LastModifiedBy
+    private String updatedBy;
 
 }
