@@ -1,1 +1,3 @@
 rootProject.name = 'website-core'
+
+include 'media-service'
