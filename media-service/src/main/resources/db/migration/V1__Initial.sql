@@ -16,7 +16,7 @@ create table if not exists file
 
 create table if not exists file_audit
 (
-    id               bigserial not null,
+    id               bigint    not null generated always as identity,
     file_id          bigint    not null,
     user_id          bigint,
     user_ip          varchar   not null,
