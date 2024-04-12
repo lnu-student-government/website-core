@@ -1,6 +1,6 @@
 create table if not exists file
 (
-    id            bigserial    not null,
+    id            bigint       not null generated always as identity,
     name          varchar(255) not null,
     owner_id      bigint       not null,
     created_at    timestamp    not null,
