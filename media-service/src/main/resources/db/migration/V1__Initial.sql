@@ -23,5 +23,6 @@ create table if not exists file_audit
     interaction_type varchar   not null,
     interaction_time timestamp not null,
 
+    constraint file_audit_pk primary key (id),
     constraint file_audit_reference_file_fk foreign key (file_id) references file (id) on delete cascade on update cascade
 );
