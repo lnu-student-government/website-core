@@ -3,6 +3,7 @@ package org.sglnu.userservice.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.sglnu.userservice.repository.UserRepository;
+import org.sglnu.userservice.security.UserDetailsImplService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,8 +24,7 @@ public class ApplicationConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService(){
-        return username -> (UserDetails) userRepository.searchUserByPhoneNumber(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new UserDetailsImplService(userRepository);
     }
 
     @Bean
@@ -44,6 +44,5 @@ public class ApplicationConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

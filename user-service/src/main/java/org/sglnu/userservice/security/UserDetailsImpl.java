@@ -1,8 +1,4 @@
 package org.sglnu.userservice.security;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import org.sglnu.userservice.common.Faculty;
 import org.sglnu.userservice.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,13 +15,13 @@ public class UserDetailsImpl implements UserDetails{
     private String lastName;
     private String email;
     private String password;
-    private Faculty faculty;
+    private String faculty;
     private String groupName;
     private String phoneNumber;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id,String firstName, String lastName, String email, String password, Faculty faculty,
+    public UserDetailsImpl(Long id, String firstName, String lastName, String email, String password, String faculty,
                            String groupName, String phoneNumber, Collection<? extends GrantedAuthority> authorities){
         this.id = id;
         this.firstName = firstName;
