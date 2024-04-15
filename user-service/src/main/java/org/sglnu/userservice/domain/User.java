@@ -39,7 +39,7 @@ public class User {
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
-    private String faculty;
+    private Faculty faculty;
     private String groupName;
     private String phoneNumber;
     private Long avatarId;
