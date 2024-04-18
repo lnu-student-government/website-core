@@ -1,6 +1,5 @@
 package org.sglnu.userservice.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
@@ -14,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.sglnu.userservice.common.Faculty;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -44,13 +44,12 @@ public class User {
     private String phoneNumber;
     private Long avatarId;
 
-    private String createdBy;
+    @CreatedDate
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String updatedBy;
 
-    @Column(name = "user_role")
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    private String role;
 
 }

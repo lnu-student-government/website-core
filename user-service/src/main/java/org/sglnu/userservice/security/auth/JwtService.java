@@ -1,4 +1,4 @@
-package org.sglnu.userservice.security;
+package org.sglnu.userservice.security.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -22,7 +22,7 @@ public class JwtService {
     @Value("${jwt.secret-key}")
     private String SECRET_KEY;
 
-    private Claims extractAllClaims(String token){
+    private Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -37,24 +37,24 @@ public class JwtService {
     }
 
     public String extractUserPhoneNumber(String token) {
-        return extractClaim(token,Claims::getSubject);
+        return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(),userDetails);
+    public String generateToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails);
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getSigningKey(), SignatureAlgorithm.ES256)
                 .compact();
     }
 
-    public boolean isTokenValid(String token,UserDetails userDetails){
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userEmail = extractUserPhoneNumber(token);
         return (userEmail.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
@@ -64,10 +64,10 @@ public class JwtService {
     }
 
     private Date extractExpiration(String token) {
-        return extractClaim(token,Claims::getExpiration);
+        return extractClaim(token, Claims::getExpiration);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolvel){
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolvel) {
         final Claims claims = extractAllClaims(token);
         return claimsResolvel.apply(claims);
     }

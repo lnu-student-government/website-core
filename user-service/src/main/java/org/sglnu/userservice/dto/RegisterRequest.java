@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
+import org.sglnu.userservice.common.Faculty;
 
 import static org.sglnu.userservice.dto.UserRequest.*;
 
@@ -24,7 +25,7 @@ public class RegisterRequest {
                     " containing at least one digit, one uppercase letter, and one lowercase letter")
     private String password;
 
-    private String faculty;
+    private Faculty faculty;
 
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Must start with a capital letter")

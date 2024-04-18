@@ -2,37 +2,27 @@ package org.sglnu.userservice.configuration;
 
 
 import lombok.RequiredArgsConstructor;
-import org.sglnu.userservice.repository.UserRepository;
-import org.sglnu.userservice.security.UserDetailsImplService;
+import org.sglnu.userservice.security.auth.CustomAuthenticationEntryPoint;
+import org.sglnu.userservice.service.UsersDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfiguration {
 
-    private final UserRepository userRepository;
+    private final UsersDetailsService userDetailsService;
 
     @Bean
-    public UserDetailsService userDetailsService(){
-        return new UserDetailsImplService(userRepository);
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -41,8 +31,16 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
+        return daoAuthenticationProvider;
     }
 
 }
