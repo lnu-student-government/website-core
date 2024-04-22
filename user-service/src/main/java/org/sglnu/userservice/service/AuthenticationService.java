@@ -9,6 +9,7 @@ import org.sglnu.userservice.domain.User;
 import org.sglnu.userservice.dto.AuthenticationRequest;
 import org.sglnu.userservice.dto.AuthenticationResponse;
 import org.sglnu.userservice.dto.RegisterRequest;
+import org.sglnu.userservice.mapper.UserMapper;
 import org.sglnu.userservice.repository.UserRepository;
 import org.sglnu.userservice.security.UsersDetails;
 import org.sglnu.userservice.security.auth.JwtService;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 @Service
 @RequiredArgsConstructor
@@ -25,23 +27,22 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
+    private final UserMapper userMaper;
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest registerRequest) {
-        //TODO: Use mapper instead please
-        User user = new User();
-        user.setFirstName(registerRequest.getFirstName());
-        user.setLastName(registerRequest.getLastName());
-        user.setEmail(registerRequest.getEmail());
+
+        if (!registerRequest.getPassword().equals(registerRequest.getRepeatedPassword())) {
+            throw new RuntimeException("Passwords do not match!");
+        }
+
+        User user = userMaper.map(registerRequest);
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setFaculty(registerRequest.getFaculty());
-        user.setGroupName(registerRequest.getGroupName());
-        user.setPhoneNumber(registerRequest.getPhoneNumber());
-        //
 
         userRepository.save(user);
 
-        var jwtToken = jwtService.generateToken(new UsersDetails(user));
+        UsersDetails userDetails = new UsersDetails(user);
+        var jwtToken = jwtService.generateToken(userDetails);
 
         return AuthenticationResponse.builder().token(jwtToken).build();
     }

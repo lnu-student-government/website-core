@@ -46,6 +46,7 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 
     implementation "org.mapstruct:mapstruct:${mapStructVersion}"
     implementation "com.querydsl:querydsl-core:${queryDslVersion}"

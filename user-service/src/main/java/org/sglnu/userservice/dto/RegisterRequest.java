@@ -25,6 +25,9 @@ public class RegisterRequest {
                     " containing at least one digit, one uppercase letter, and one lowercase letter")
     private String password;
 
+    @NotBlank(message = "Please repeat the password!")
+    private String repeatedPassword;
+
     private Faculty faculty;
 
     @Pattern(regexp = "[A-Z][a-z]+",
