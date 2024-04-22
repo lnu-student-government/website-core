@@ -10,18 +10,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
 
     @Value("${jwt.secret-key}")
-    private String SECRET_KEY;
+    private String secretKey;
 
     private Claims extractAllClaims(String token) {
         return Jwts
@@ -33,7 +31,7 @@ public class JwtService {
     }
 
     private SecretKey getSigningKey() {
-        byte[] keyByse = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyByse = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyByse);
     }
 

@@ -31,11 +31,9 @@ public class AuthenticationService {
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest registerRequest) {
-
         if (!registerRequest.getPassword().equals(registerRequest.getRepeatedPassword())) {
             throw new RuntimeException("Passwords do not match!");
         }
-
         User user = userMaper.map(registerRequest);
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
@@ -43,8 +41,9 @@ public class AuthenticationService {
 
         UsersDetails userDetails = new UsersDetails(user);
         var jwtToken = jwtService.generateToken(userDetails);
-
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        long currentTime = System.currentTimeMillis();
+        long expirationTime = currentTime + (1000 * 60 * 60 * 24); // 24 hours
+        return new AuthenticationResponse(jwtToken, currentTime, expirationTime);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
@@ -55,8 +54,10 @@ public class AuthenticationService {
         }
 
         String jwt = jwtService.generateToken(userDetails);
+        long currentTime = System.currentTimeMillis();
+        long expirationTime = currentTime + (1000 * 60 * 60 * 24);
         injectCookieToTheResponse(response, jwt);
-        return new AuthenticationResponse(jwt);
+        return new AuthenticationResponse(jwt, currentTime, expirationTime);
     }
 
     private void injectCookieToTheResponse(HttpServletResponse response, String jwt) {

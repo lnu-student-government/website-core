@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class AuthenticationResponse {
 
     private String token;
-    //TODO: This is not enough, first of all we need to return the User entity itself and token should be returned in cookies
-
+    private long timestamp;
+    private long expirationTime;
 }

@@ -28,6 +28,7 @@ public class RegisterRequest {
     @NotBlank(message = "Please repeat the password!")
     private String repeatedPassword;
 
+    @NotBlank(message = "Faculty name cannot be empty!")
     private Faculty faculty;
 
     @Pattern(regexp = "[A-Z][a-z]+",
