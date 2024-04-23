@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sglnu.eventservice.dto.ErrorDetail;
+import org.sglnu.eventservice.exception.EventIsFullException;
 import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.mapper.ErrorDetailMapper;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 NOT_FOUND,
                 URI.create("about:blank"),
                 "Event not found!",
+                URI.create(((ServletWebRequest) request).getRequest().getRequestURI()),
+                List.of(errorDetailMapper.from(ex))
+        );
+    }
+
+    @ExceptionHandler({ EventIsFullException.class })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleEventIsFullException(EventIsFullException ex, WebRequest request) {
+        return getProblemDetail(
+                HttpStatus.BAD_REQUEST,
+                URI.create("about:blank"),
+                "Event is full!",
                 URI.create(((ServletWebRequest) request).getRequest().getRequestURI()),
                 List.of(errorDetailMapper.from(ex))
         );

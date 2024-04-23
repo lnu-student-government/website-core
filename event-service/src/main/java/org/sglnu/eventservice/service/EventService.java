@@ -1,14 +1,14 @@
 package org.sglnu.eventservice.service;
 
 import com.querydsl.core.types.Predicate;
-import org.sglnu.eventservice.common.EventRegistrationStatus;
 import org.sglnu.eventservice.domain.Event;
 import org.sglnu.eventservice.domain.UserEvent;
-import org.sglnu.eventservice.dto.EventRequest;
-import org.sglnu.eventservice.dto.EventResponse;
-import org.sglnu.eventservice.dto.EventResponses;
+import org.sglnu.eventservice.dto.*;
+import org.sglnu.eventservice.exception.EventIsFullException;
+import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.mapper.EventMapper;
 import org.sglnu.eventservice.repository.EventRepository;
+import org.sglnu.userservice.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.sglnu.eventservice.repository.UserEventRepository;
@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.sglnu.eventservice.common.EventRegistrationStatus.*;
@@ -74,53 +73,47 @@ public class EventService {
         return eventMapper.mapToEventResponses(events);
     }
 
-    public EventResponse subscribeToEvent(Long userId, Long eventId, Event eventSubscribeTo){
-        Optional<Event> event = eventRepository.findById(eventId);
-        if(event.isEmpty()){
-            throw new IllegalArgumentException("Event not found");
+    public SuccessfulSubscriptionResponse subscribeToEvent(Long userId, Long eventId, Event eventSubscribeTo){
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event of id [%s] couldn't be found".formatted(eventId), eventId, "Event"));
+
+        if (event.getCurrentParticipants().equals(event.getMaxParticipants())) {
+            throw new EventIsFullException("Event is full", eventId, event.getMaxParticipants());
         }
 
-        Optional<UserEvent> userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId);
-        if(userEvent.isPresent()){
-            throw new IllegalArgumentException("User already subscribed to event");
-        }
+        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
+                .orElseThrow(() -> new UserNotFoundException("User event not found"));
 
-        UserEvent newUserEvent = new UserEvent();
-        newUserEvent.setUserId(userId);
-        newUserEvent.setEvent(event.get());
+        userEvent.setEvent(event);
 
         Boolean isPaid = eventSubscribeTo.getIsPaid();
 
-        switch (isPaid.toString()) {
-            case "true":
-                newUserEvent.setStatus(PENDING);
-                break;
-            case "false":
-                newUserEvent.setStatus(APPROVED);
-                break;
-            default:
-                throw new IllegalArgumentException("Event is paid, but no payment details provided");
+        if (isPaid.toString().equals("true")) {
+            userEvent.setStatus(PENDING);
+        } else {
+            userEvent.setStatus(APPROVED);
         }
 
+        userEventRepository.save(userEvent);
 
-        return eventMapper.mapToEventResponse(event.get());
+        return new SuccessfulSubscriptionResponse("User with id=[%s] has been successfully subscribed to the " +
+                "event with id=[%s]".formatted(userId, eventId), eventId, userId, APPROVED);
     }
-    public EventResponse unsubscribeFromEvent(Long userId, Long eventId){
-        Optional<UserEvent> userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId);
-        if(userEvent.isEmpty()){
-            throw new IllegalArgumentException("User not subscribed to event");
-        }
 
-        userEventRepository.delete(userEvent.get());
+    public SuccessfulUnsubscriptionResponse unsubscribeFromEvent(Long userId, Long eventId){
+        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
+                .orElseThrow(() -> new IllegalArgumentException("User event not found"));
 
-        return eventRepository.findById(eventId)
-                .map(eventMapper::mapToEventResponse)
-                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+
+        userEventRepository.delete(userEvent);
+
+        return new SuccessfulUnsubscriptionResponse(("User with id=[%s] has been successfully unsubscribed from event" +
+                " with id=[%s]").formatted(userId, eventId), eventId, userId, UNSUBSCRIBED);
     }
 
     @Transactional
-    public UserEvent approveUser(Long id) {
-        UserEvent userEvent = userEventRepository.findById(id)
+    public UserEvent approveUser(Long userId, Long eventId) {
+        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
                 .orElseThrow(() -> new IllegalArgumentException("User event not found"));
 
         userEvent.setStatus(APPROVED);
@@ -129,8 +122,8 @@ public class EventService {
     }
 
     @Transactional
-    public UserEvent rejectUser(Long id) {
-        UserEvent userEvent = userEventRepository.findById(id)
+    public UserEvent rejectUser(Long userId, Long eventId) {
+        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
                 .orElseThrow(() -> new IllegalArgumentException("User event not found"));
 
         userEvent.setStatus(REJECTED);

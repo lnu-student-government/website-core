@@ -32,4 +32,5 @@ public class EventResponses implements Iterable<EventResponse>{
     public void add(EventResponse eventResponse) {
         eventResponses.add(eventResponse);
     }
+
 }

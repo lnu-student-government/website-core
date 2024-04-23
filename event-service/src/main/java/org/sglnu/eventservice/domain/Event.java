@@ -49,4 +49,8 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private List<UserEvent> userEvents;
 
+    public Integer getCurrentParticipants() {
+        return userEvents.size();
+    }
+
 }
