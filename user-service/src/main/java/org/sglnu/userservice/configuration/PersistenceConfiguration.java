@@ -9,9 +9,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing
 public class PersistenceConfiguration {
 
-
-    public AuditorAwareImpl auditorProvider(){
-        return new AuditorAwareImpl();
-    }
-
 }
