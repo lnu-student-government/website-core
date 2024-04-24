@@ -1,5 +1,6 @@
 package org.sglnu.userservice.mapper;
 
+import org.mapstruct.Mapping;
 import org.sglnu.userservice.domain.User;
 import org.sglnu.userservice.dto.RegisterRequest;
 import org.sglnu.userservice.dto.UpdateUserRequest;
@@ -14,6 +15,9 @@ import org.mapstruct.ReportingPolicy;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
+
+    @Mapping(target = "role", constant = "USER")
+    User map(RegisterRequest registerRequest);
 
     User mapToUser(UserRequest request);
 
