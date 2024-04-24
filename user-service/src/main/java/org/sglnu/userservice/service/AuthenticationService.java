@@ -10,8 +10,6 @@ import org.sglnu.userservice.dto.AuthenticationRequest;
 import org.sglnu.userservice.dto.AuthenticationResponse;
 import org.sglnu.userservice.dto.RegisterRequest;
 import org.sglnu.userservice.exception.PasswordMismatchException;
-import org.sglnu.userservice.exception.PostErrorResult;
-import org.sglnu.userservice.exception.PostExeption;
 import org.sglnu.userservice.mapper.UserMapper;
 import org.sglnu.userservice.repository.UserRepository;
 import org.sglnu.userservice.security.UsersDetails;
@@ -54,7 +52,7 @@ public class AuthenticationService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getPhoneNumber());
 
         if (!passwordEncoder.matches(request.getPassword(), userDetails.getPassword())) {
-            throw new PostExeption(PostErrorResult.PASSWORD_INCORRECT);
+            throw new PasswordMismatchException("Incorrect password or email");
         }
 
         String jwt = jwtService.generateToken(userDetails);

@@ -1,6 +1,7 @@
 package org.sglnu.userservice.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sglnu.userservice.dto.AuthenticationRequest;
 import org.sglnu.userservice.dto.AuthenticationResponse;
@@ -19,12 +20,12 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public AuthenticationResponse register(@RequestBody RegisterRequest registerRequest){
+    public AuthenticationResponse register(@Valid @RequestBody RegisterRequest registerRequest){
         return authenticationService.register(registerRequest);
     }
 
     @PostMapping("/authenticate")
-    public AuthenticationResponse register(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response){
+    public AuthenticationResponse register(@Valid @RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response){
         return authenticationService.authenticate(authenticationRequest, response);
     }
 }
