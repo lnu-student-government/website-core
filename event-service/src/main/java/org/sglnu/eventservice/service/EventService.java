@@ -6,9 +6,9 @@ import org.sglnu.eventservice.domain.UserEvent;
 import org.sglnu.eventservice.dto.*;
 import org.sglnu.eventservice.exception.EventIsFullException;
 import org.sglnu.eventservice.exception.EventNotFoundException;
+import org.sglnu.eventservice.exception.UserIsAlreadySubscribed;
 import org.sglnu.eventservice.mapper.EventMapper;
 import org.sglnu.eventservice.repository.EventRepository;
-import org.sglnu.userservice.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.sglnu.eventservice.repository.UserEventRepository;
@@ -82,13 +82,14 @@ public class EventService {
         }
 
         UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
-                .orElseThrow(() -> new UserNotFoundException("User event not found"));
+                .orElseThrow(() -> new UserIsAlreadySubscribed(("User of id [%s] is already subscribed to Event of" +
+                        "id=[%s]").formatted(userId, eventId), userId, eventId));
 
         userEvent.setEvent(event);
 
         Boolean isPaid = eventSubscribeTo.getIsPaid();
 
-        if (isPaid.toString().equals("true")) {
+        if (isPaid) {
             userEvent.setStatus(PENDING);
         } else {
             userEvent.setStatus(APPROVED);
@@ -96,8 +97,8 @@ public class EventService {
 
         userEventRepository.save(userEvent);
 
-        return new SuccessfulSubscriptionResponse("User with id=[%s] has been successfully subscribed to the " +
-                "event with id=[%s]".formatted(userId, eventId), eventId, userId, APPROVED);
+        return new SuccessfulSubscriptionResponse("User of id=[%s] has been successfully subscribed to the " +
+                "event of id=[%s]".formatted(userId, eventId), eventId, userId, APPROVED);
     }
 
     public SuccessfulUnsubscriptionResponse unsubscribeFromEvent(Long userId, Long eventId){
@@ -107,8 +108,8 @@ public class EventService {
 
         userEventRepository.delete(userEvent);
 
-        return new SuccessfulUnsubscriptionResponse(("User with id=[%s] has been successfully unsubscribed from event" +
-                " with id=[%s]").formatted(userId, eventId), eventId, userId, UNSUBSCRIBED);
+        return new SuccessfulUnsubscriptionResponse(("User of id=[%s] has been successfully unsubscribed from the " +
+                "event of id=[%s]").formatted(userId, eventId), eventId, userId, UNSUBSCRIBED);
     }
 
     @Transactional
