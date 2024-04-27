@@ -22,7 +22,7 @@ public interface ErrorDetailMapper {
     @Mapping(target = "message", expression = "java(\"Must be of type [%s]\".formatted(ex.getRequiredType().getSimpleName()))")
     ErrorDetail from(MethodArgumentTypeMismatchException ex);
 
-    @Mapping(target = "cause", expression = "java(ex.getParameterName())")
+    @Mapping(target = "cause", expression =  "java(ex.getParameterName())")
     @Mapping(target = "message", expression = "java(ex.getMessage())")
     ErrorDetail from(MissingServletRequestParameterException ex);
 

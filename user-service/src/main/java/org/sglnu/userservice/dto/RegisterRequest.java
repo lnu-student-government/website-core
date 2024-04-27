@@ -4,8 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
+import org.sglnu.userservice.common.Faculty;
 
 import static org.sglnu.userservice.dto.UserRequest.*;
 
@@ -19,12 +21,17 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank(message = "Password cannot be empty!")
+    @Size(min = 8, message = "Password should be less than 8 symbols")
     @Pattern(regexp = PASSWORD_REGEX,
             message = "Must be minimum 8 symbols long, using digits and latin letters," +
                     " containing at least one digit, one uppercase letter, and one lowercase letter")
     private String password;
 
-    private String faculty;
+    @NotBlank(message = "Please repeat the password!")
+    private String repeatedPassword;
+
+    @NotBlank(message = "Faculty name cannot be empty!")
+    private Faculty faculty;
 
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Must start with a capital letter")
