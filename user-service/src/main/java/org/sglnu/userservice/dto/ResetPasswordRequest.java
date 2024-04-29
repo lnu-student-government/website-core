@@ -3,7 +3,7 @@ package org.sglnu.userservice.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-import static org.sglnu.userservice.dto.UserRequest.PASSWORD_REGEX;
+import static org.sglnu.userservice.dto.user.UserRequest.PASSWORD_REGEX;
 
 public class ResetPasswordRequest {
 

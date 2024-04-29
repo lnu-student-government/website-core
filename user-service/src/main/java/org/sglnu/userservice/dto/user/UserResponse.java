@@ -1,4 +1,4 @@
-package org.sglnu.userservice.dto;
+package org.sglnu.userservice.dto.user;
 
 import lombok.Builder;
 

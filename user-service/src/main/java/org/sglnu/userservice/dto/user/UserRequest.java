@@ -1,4 +1,4 @@
-package org.sglnu.userservice.dto;
+package org.sglnu.userservice.dto.user;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;

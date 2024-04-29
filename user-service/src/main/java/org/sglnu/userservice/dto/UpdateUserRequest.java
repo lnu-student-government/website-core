@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
 import org.sglnu.userservice.common.Faculty;
+import org.sglnu.userservice.dto.user.UserRequest;
 
 @Data
 @Builder
