@@ -1,84 +1,84 @@
-version: '3.8'
-
-services:
-
-  discovery-service:
-    build:
-      context: ./discovery-service
-      dockerfile: Dockerfile
-    depends_on:
-      - postgres
-    environment:
-      PORT: 8761
-    ports:
-      - "9091:8761"
-
-  user-service:
-    build:
-      context: ./user-service
-      dockerfile: Dockerfile
-    depends_on:
-        - discovery-service
-        - postgres
-    environment:
-      EUREKA_PORT: 8761
-      PORT: 8082
-      DB_URL: jdbc:postgresql://postgres:5432/coredb
-    ports:
-      - "9097:8082"
-
-  category-service:
-    build:
-      context: ./category-service
-      dockerfile: Dockerfile
-    depends_on:
-      - discovery-service
-      - postgres
-    environment:
-      EUREKA_PORT: 8761
-      PORT: 8083
-      DB_URL: jdbc:postgresql://postgres:5432/coredb
-    ports:
-      - "9093:8083"
-
-  event-service:
-    build:
-      context: ./event-service
-      dockerfile: Dockerfile
-    depends_on:
-      - discovery-service
-      - postgres
-    environment:
-      EUREKA_PORT: 8761
-      PORT: 8084
-      DB_URL: jdbc:postgresql://postgres:5432/coredb
-    ports:
-      - "9094:8084"
-
-  feedback-service:
-    build:
-      context: ./feedback-service
-      dockerfile: Dockerfile
-    depends_on:
-      - discovery-service
-      - postgres
-    environment:
-      EUREKA_PORT: 8761
-      PORT: 8086
-      DB_URL: jdbc:postgresql://postgres:5432/coredb
-    ports:
-      - "9096:8086"
-
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: coredb
-    ports:
-      - "6969:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+#version: '3.8'
+#
+#services:
+#
+#  discovery-service:
+#    build:
+#      context: ./discovery-service
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - postgres
+#    environment:
+#      PORT: 8761
+#    ports:
+#      - "9091:8761"
+#
+#  user-service:
+#    build:
+#      context: ./user-service
+#      dockerfile: Dockerfile
+#    depends_on:
+#        - discovery-service
+#        - postgres
+#    environment:
+#      EUREKA_PORT: 8761
+#      PORT: 8082
+#      DB_URL: jdbc:postgresql://postgres:5432/coredb
+#    ports:
+#      - "9097:8082"
+#
+#  category-service:
+#    build:
+#      context: ./category-service
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - discovery-service
+#      - postgres
+#    environment:
+#      EUREKA_PORT: 8761
+#      PORT: 8083
+#      DB_URL: jdbc:postgresql://postgres:5432/coredb
+#    ports:
+#      - "9093:8083"
+#
+#  event-service:
+#    build:
+#      context: ./event-service
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - discovery-service
+#      - postgres
+#    environment:
+#      EUREKA_PORT: 8761
+#      PORT: 8084
+#      DB_URL: jdbc:postgresql://postgres:5432/coredb
+#    ports:
+#      - "9094:8084"
+#
+#  feedback-service:
+#    build:
+#      context: ./feedback-service
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - discovery-service
+#      - postgres
+#    environment:
+#      EUREKA_PORT: 8761
+#      PORT: 8086
+#      DB_URL: jdbc:postgresql://postgres:5432/coredb
+#    ports:
+#      - "9096:8086"
+#
+#  postgres:
+#    image: postgres:latest
+#    environment:
+#      POSTGRES_USER: root
+#      POSTGRES_PASSWORD: root
+#      POSTGRES_DB: coredb
+#    ports:
+#      - "6969:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#
+#volumes:
+#  postgres_data:

@@ -27,13 +27,3 @@ create table if not exists audit_user
 
     constraint audit_user_pk primary key (id)
 );
-
-create table if not exists user_categories
-(
-    id          bigint generated always as identity,
-    user_id     bigint not null,
-    category_id bigint not null,
-
-    constraint user_categories_pk primary key (id),
-    constraint user_categories_user_id_fk foreign key (user_id) references users
-);

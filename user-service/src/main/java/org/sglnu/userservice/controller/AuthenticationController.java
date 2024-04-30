@@ -3,9 +3,9 @@ package org.sglnu.userservice.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sglnu.userservice.dto.authentication.AuthenticationRequest;
-import org.sglnu.userservice.dto.authentication.AuthenticationResponse;
-import org.sglnu.userservice.dto.register.RegisterRequest;
+import org.sglnu.userservice.register.authentication.AuthenticationRequest;
+import org.sglnu.userservice.register.authentication.AuthenticationResponse;
+import org.sglnu.userservice.register.RegisterRequest;
 import org.sglnu.userservice.service.AuthenticationService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +22,8 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public AuthenticationResponse register(@Valid @RequestBody RegisterRequest registerRequest, @Valid@RequestBody List<Long> categoriesId){
-        return authenticationService.register(registerRequest,categoriesId);
+    public AuthenticationResponse register(@Valid @RequestBody RegisterRequest registerRequest){
+        return authenticationService.register(registerRequest);
     }
 
     @PostMapping("/authenticate")

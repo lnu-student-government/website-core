@@ -1,4 +1,4 @@
-package org.sglnu.userservice.dto;
+package org.sglnu.userservice.register.authentication;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

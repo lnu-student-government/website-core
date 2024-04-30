@@ -2,8 +2,8 @@ package org.sglnu.userservice.service;
 
 import com.querydsl.core.types.Predicate;
 import org.sglnu.userservice.domain.User;
-import org.sglnu.userservice.dto.*;
-import org.sglnu.userservice.dto.register.RegisterRequest;
+import org.sglnu.userservice.register.authentication.UpdateUserRequest;
+import org.sglnu.userservice.register.RegisterRequest;
 import org.sglnu.userservice.dto.user.UserResponse;
 import org.sglnu.userservice.exception.UserNotFoundException;
 import org.sglnu.userservice.exception.WrongCredentialsException;

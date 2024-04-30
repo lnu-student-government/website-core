@@ -5,15 +5,14 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.sglnu.userservice.repository.UserCategoryRepository;
 import org.sglnu.userservice.domain.User;
-import org.sglnu.userservice.domain.UserCategory;
-import org.sglnu.userservice.dto.authentication.AuthenticationRequest;
-import org.sglnu.userservice.dto.authentication.AuthenticationResponse;
-import org.sglnu.userservice.dto.register.RegisterRequest;
+import org.sglnu.userservice.dto.usercategory.UserCategoryResponse;
+import org.sglnu.userservice.register.authentication.AuthenticationRequest;
+import org.sglnu.userservice.register.authentication.AuthenticationResponse;
+import org.sglnu.userservice.register.RegisterRequest;
 import org.sglnu.userservice.exception.PasswordMismatchException;
 import org.sglnu.userservice.mapper.UserMapper;
-import org.sglnu.userservice.repository.CategoryServiceClient;
-import org.sglnu.userservice.repository.UserCategoryRepository;
 import org.sglnu.userservice.repository.UserRepository;
 import org.sglnu.userservice.security.UsersDetails;
 import org.sglnu.userservice.security.auth.JwtService;
@@ -37,19 +36,17 @@ public class AuthenticationService {
     private final UserCategoryRepository userCategoryRepository;
 
     @Transactional
-    public AuthenticationResponse register(RegisterRequest registerRequest, List<Long> categoriesId) {
+    public AuthenticationResponse register(RegisterRequest registerRequest) {
         if (!registerRequest.getPassword().equals(registerRequest.getRepeatedPassword())) {
             throw new PasswordMismatchException("Passwords don't match!");
         }
-        UserCategory userCategory = new UserCategory();
         User user = userMaper.map(registerRequest);
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         userRepository.save(user);
 
-        userCategory.setUser(user);
-        for(Long id : categoriesId) {
-            userCategory.setCategoryId(id);
-            userCategoryRepository.save(userCategory);
+        for(Long id : registerRequest.getCategoriesId()) {
+            UserCategoryResponse userCategoryResponse = new UserCategoryResponse(user.getId(),registerRequest.getCategoriesId().get(Math.toIntExact(id)));
+            userCategoryRepository.save(userCategoryResponse);
         }
 
         UsersDetails userDetails = new UsersDetails(user);

@@ -2,8 +2,8 @@ package org.sglnu.userservice.controller;
 
 import com.querydsl.core.types.Predicate;
 import org.sglnu.userservice.domain.User;
-import org.sglnu.userservice.dto.register.RegisterRequest;
-import org.sglnu.userservice.dto.UpdateUserRequest;
+import org.sglnu.userservice.register.RegisterRequest;
+import org.sglnu.userservice.register.authentication.UpdateUserRequest;
 import org.sglnu.userservice.dto.user.UserResponse;
 import org.sglnu.userservice.service.UserService;
 import jakarta.validation.Valid;

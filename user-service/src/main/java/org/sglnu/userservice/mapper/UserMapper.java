@@ -2,8 +2,8 @@ package org.sglnu.userservice.mapper;
 
 import org.mapstruct.Mapping;
 import org.sglnu.userservice.domain.User;
-import org.sglnu.userservice.dto.register.RegisterRequest;
-import org.sglnu.userservice.dto.UpdateUserRequest;
+import org.sglnu.userservice.register.RegisterRequest;
+import org.sglnu.userservice.register.authentication.UpdateUserRequest;
 import org.sglnu.userservice.dto.user.UserRequest;
 import org.sglnu.userservice.dto.user.UserResponse;
 import org.mapstruct.Mapper;

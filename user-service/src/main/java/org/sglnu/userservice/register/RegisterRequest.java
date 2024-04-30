@@ -1,4 +1,4 @@
-package org.sglnu.userservice.dto.register;
+package org.sglnu.userservice.register;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
@@ -9,7 +9,11 @@ import lombok.Builder;
 import lombok.Data;
 import org.sglnu.userservice.common.Faculty;
 
-import static org.sglnu.userservice.dto.user.UserRequest.*;
+import java.util.List;
+
+import static org.sglnu.userservice.dto.user.UserRequest.EMAIL_REGEX;
+import static org.sglnu.userservice.dto.user.UserRequest.PASSWORD_REGEX;
+import static org.sglnu.userservice.dto.user.UserRequest.PHONE_NUMBER_REGEX;
 
 @Data
 @Builder
@@ -49,4 +53,6 @@ public class RegisterRequest {
             message = "Phone number has to be in a valid format!")
     private String phoneNumber;
 
+
+    List<Long> categoriesId;
 }

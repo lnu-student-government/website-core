@@ -1,7 +1,7 @@
 package org.sglnu.userservice.exception;
 
-import org.sglnu.userservice.dto.register.RegisterRequest;
-import org.sglnu.userservice.dto.UpdateUserRequest;
+import org.sglnu.userservice.register.RegisterRequest;
+import org.sglnu.userservice.register.authentication.UpdateUserRequest;
 import lombok.Getter;
 
 @Getter

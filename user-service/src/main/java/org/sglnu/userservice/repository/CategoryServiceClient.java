@@ -1,6 +1,6 @@
 package org.sglnu.userservice.repository;
 
-import org.sglnu.categoryservice.dto.CategoryResponse;
+import org.sglnu.userservice.dto.usercategory.CategoryResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
