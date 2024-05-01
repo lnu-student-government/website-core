@@ -5,10 +5,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.sglnu.userservice.client.dto.UserCategoryResponse;
 import org.sglnu.userservice.domain.User;
 import org.sglnu.userservice.dto.AuthenticationRequest;
 import org.sglnu.userservice.dto.AuthenticationResponse;
 import org.sglnu.userservice.dto.RegisterRequest;
+import org.sglnu.userservice.dto.TokenResponse;
 import org.sglnu.userservice.exception.PasswordMismatchException;
 import org.sglnu.userservice.mapper.UserMapper;
 import org.sglnu.userservice.repository.UserRepository;
@@ -18,6 +20,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -29,6 +33,8 @@ public class AuthenticationService {
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final UserMapper userMaper;
+    private final UserCategoryService userCategoryService;
+    private final UserService userService;
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest registerRequest) {
@@ -39,13 +45,15 @@ public class AuthenticationService {
         User user = userMaper.map(registerRequest);
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        List<UserCategoryResponse> categoryResponse = userCategoryService.assignCategoriesToUser(savedUser.getId(), registerRequest.getCategories());
 
         UsersDetails userDetails = new UsersDetails(user);
         var jwtToken = jwtService.generateToken(userDetails);
         long currentTime = System.currentTimeMillis();
-        long expirationTime = currentTime + (1000 * 60 * 60 * 24); // 24 hours
-        return new AuthenticationResponse(jwtToken, currentTime, expirationTime);
+        long expirationTime = currentTime + (1000 * 60 * 60 * 24);
+        TokenResponse tokenResponse = new TokenResponse(jwtToken, currentTime, expirationTime);
+        return new AuthenticationResponse(userMaper.mapToUserResponse(savedUser), categoryResponse, tokenResponse);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
@@ -55,11 +63,14 @@ public class AuthenticationService {
             throw new PasswordMismatchException("Incorrect password or email");
         }
 
+        User user = userService.findByPhoneNumber(request.getPhoneNumber());
+
         String jwt = jwtService.generateToken(userDetails);
         long currentTime = System.currentTimeMillis();
         long expirationTime = currentTime + (1000 * 60 * 60 * 24);
         injectCookieToTheResponse(response, jwt);
-        return new AuthenticationResponse(jwt, currentTime, expirationTime);
+        TokenResponse tokenResponse = new TokenResponse(jwt, currentTime, expirationTime);
+        return new AuthenticationResponse(userMaper.mapToUserResponse(user), null, tokenResponse);
     }
 
     private void injectCookieToTheResponse(HttpServletResponse response, String jwt) {

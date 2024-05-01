@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.sglnu.userservice.client.dto.UserCategoryResponse;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -11,7 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationResponse {
 
-    private String token;
-    private long timestamp;
-    private long expirationTime;
+    private UserResponse user;
+    private List<UserCategoryResponse> assignedCategories;
+    private TokenResponse token;
+
 }

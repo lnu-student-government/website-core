@@ -1,6 +1,7 @@
-package org.sglnu.userservice.exception;
+package org.sglnu.userservice.exception.handler;
 
 import org.sglnu.userservice.dto.ErrorDetail;
+import org.sglnu.userservice.exception.PasswordMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;

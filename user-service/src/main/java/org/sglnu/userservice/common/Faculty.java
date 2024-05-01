@@ -1,7 +1,11 @@
 package org.sglnu.userservice.common;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
@@ -28,6 +32,19 @@ public enum Faculty {
     TEACHER_TRAINING_COLLEGE("Педагогічний фаховий коледж");
 
     private final String name;
+
+    @JsonCreator
+    public static Faculty forValue(String value) {
+        return Arrays.stream(Faculty.values())
+                .filter(faculty -> faculty.getName().equalsIgnoreCase(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Unknown faculty: " + value));
+    }
+
+    @JsonValue
+    public String getName() {
+        return name;
+    }
 
 }
 

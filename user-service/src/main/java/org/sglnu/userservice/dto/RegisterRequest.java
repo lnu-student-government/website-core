@@ -3,11 +3,15 @@ package org.sglnu.userservice.dto;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 import org.sglnu.userservice.common.Faculty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.sglnu.userservice.dto.UserRequest.*;
 
@@ -30,7 +34,7 @@ public class RegisterRequest {
     @NotBlank(message = "Please repeat the password!")
     private String repeatedPassword;
 
-    @NotBlank(message = "Faculty name cannot be empty!")
+    @NotNull(message = "Faculty name cannot be empty!")
     private Faculty faculty;
 
     @Pattern(regexp = "[A-Z][a-z]+",
@@ -48,5 +52,7 @@ public class RegisterRequest {
     @Pattern(regexp = PHONE_NUMBER_REGEX,
             message = "Phone number has to be in a valid format!")
     private String phoneNumber;
+
+    private List<String> categories;
 
 }

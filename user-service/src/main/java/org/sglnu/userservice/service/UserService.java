@@ -20,17 +20,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-
-    @Transactional
-    public UserResponse save(RegisterRequest request) {
-        if (userRepository.existsByEmailIgnoreCase(request.getEmail())) {
-            throw new WrongCredentialsException("Email is already taken!", request);
-        }
-
-        User newUser = userRepository.save(userMapper.mapToUser(request));
-        return userMapper.mapToUserResponse(newUser);
-    }
-
     public UserResponse getById(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::mapToUserResponse)

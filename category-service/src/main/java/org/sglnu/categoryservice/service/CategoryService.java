@@ -40,6 +40,10 @@ public class CategoryService {
                 .map(categoryMapper::mapToCategoryResponse);
     }
 
+    public Category getByName(String name) {
+        return categoryRepository.findByName(name).orElseThrow(() -> new CategoryNotFoundException("Category with name " + name + " not found"));
+    }
+
     public CategoryResponse update(Long id, UpdateCategoryRequest request){
         Category category = categoryRepository.findById(id).orElseThrow(CategoryNotFoundException::new);
         Category updatedCategory = categoryMapper.mapToCategory(request, category);

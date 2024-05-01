@@ -38,13 +38,6 @@ public class UserController {
 
     private final UserService userService;
 
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse create(@Valid @RequestBody RegisterRequest request) {
-        return userService.save(request);
-    }
-
     @GetMapping("/{id}")
     public UserResponse getById(@PathVariable Long id) {
         return userService.getById(id);
@@ -66,4 +59,5 @@ public class UserController {
     public void deleteById(@PathVariable Long id) {
         userService.delete(id);
     }
+
 }
