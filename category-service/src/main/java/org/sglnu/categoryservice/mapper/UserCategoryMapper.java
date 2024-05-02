@@ -15,11 +15,8 @@ import java.util.List;
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserCategoryMapper {
 
-
     UserCategory toUserCategory(UserCategoryWithObject userCategoryWithObject);
-
     UserCategoryResponse toUserCategoryResponse(UserCategoryWithObject userCategoryWithObject);
-
     List<UserCategoryResponse> toUserCategoryResponseList(List<UserCategoryWithObject> userCategoryWithObjects);
 
 }
