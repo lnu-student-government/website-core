@@ -27,8 +27,6 @@ public class EventService {
 
     private final EventRepository eventRepository;
 
-    private final UserEventRepository userEventRepository;
-
     private final EventMapper eventMapper;
 
 
@@ -63,73 +61,5 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
-    public EventResponses getUserEventsSubscribedTo(Long id){
-        List<UserEvent> userEvents = userEventRepository.findByUserId(id);
-
-        List<Event> events = userEvents.stream()
-                .map(UserEvent::getEvent)
-                .collect(Collectors.toList());
-
-        return eventMapper.mapToEventResponses(events);
-    }
-
-    public SuccessfulSubscriptionResponse subscribeToEvent(Long userId, Long eventId, Event eventSubscribeTo){
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException("Event of id [%s] couldn't be found".formatted(eventId), eventId, "Event"));
-
-        if (event.getCurrentParticipants().equals(event.getMaxParticipants())) {
-            throw new EventIsFullException("Event is full", eventId, event.getMaxParticipants());
-        }
-
-        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
-                .orElseThrow(() -> new UserIsAlreadySubscribed(("User of id [%s] is already subscribed to Event of" +
-                        "id=[%s]").formatted(userId, eventId), userId, eventId));
-
-        userEvent.setEvent(event);
-
-        Boolean isPaid = eventSubscribeTo.getIsPaid();
-
-        if (isPaid) {
-            userEvent.setStatus(PENDING);
-        } else {
-            userEvent.setStatus(APPROVED);
-        }
-
-        userEventRepository.save(userEvent);
-
-        return new SuccessfulSubscriptionResponse("User of id=[%s] has been successfully subscribed to the " +
-                "event of id=[%s]".formatted(userId, eventId), eventId, userId, APPROVED);
-    }
-
-    public SuccessfulUnsubscriptionResponse unsubscribeFromEvent(Long userId, Long eventId){
-        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
-                .orElseThrow(() -> new IllegalArgumentException("User event not found"));
-
-
-        userEventRepository.delete(userEvent);
-
-        return new SuccessfulUnsubscriptionResponse(("User of id=[%s] has been successfully unsubscribed from the " +
-                "event of id=[%s]").formatted(userId, eventId), eventId, userId, UNSUBSCRIBED);
-    }
-
-    @Transactional
-    public UserEvent approveUser(Long userId, Long eventId) {
-        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
-                .orElseThrow(() -> new IllegalArgumentException("User event not found"));
-
-        userEvent.setStatus(APPROVED);
-
-        return userEventRepository.save(userEvent);
-    }
-
-    @Transactional
-    public UserEvent rejectUser(Long userId, Long eventId) {
-        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
-                .orElseThrow(() -> new IllegalArgumentException("User event not found"));
-
-        userEvent.setStatus(REJECTED);
-
-        return userEventRepository.save(userEvent);
-    }
 
 }
