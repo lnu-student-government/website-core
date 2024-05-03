@@ -7,6 +7,7 @@ import org.sglnu.eventservice.dto.ErrorDetail;
 import org.sglnu.eventservice.exception.EventIsFullException;
 import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.exception.UserIsAlreadySubscribed;
+import org.sglnu.eventservice.exception.UserIsNotSubscribedToEvent;
 import org.sglnu.eventservice.mapper.ErrorDetailMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -61,6 +62,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 URI.create("about:blank"),
                 "User is already subscribed!",
+                URI.create(((ServletWebRequest) request).getRequest().getRequestURI()),
+                List.of(errorDetailMapper.from(ex))
+        );
+    }
+
+    @ExceptionHandler({ UserIsNotSubscribedToEvent.class })
+    @ResponseStatus(NOT_FOUND)
+    public ProblemDetail handleUserIsNotSubscribedToEvent(UserIsNotSubscribedToEvent ex, WebRequest request) {
+        return getProblemDetail(
+                NOT_FOUND,
+                URI.create("about:blank"),
+                "User is not subscribed to event!",
                 URI.create(((ServletWebRequest) request).getRequest().getRequestURI()),
                 List.of(errorDetailMapper.from(ex))
         );

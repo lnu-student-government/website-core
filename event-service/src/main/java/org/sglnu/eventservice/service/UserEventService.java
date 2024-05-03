@@ -7,12 +7,16 @@ import org.sglnu.eventservice.domain.UserEvent;
 import org.sglnu.eventservice.dto.EventResponses;
 import org.sglnu.eventservice.dto.SuccessfulSubscriptionResponse;
 import org.sglnu.eventservice.dto.SuccessfulUnsubscriptionResponse;
+import org.sglnu.eventservice.dto.UserEventResponse;
 import org.sglnu.eventservice.exception.EventIsFullException;
 import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.exception.UserIsAlreadySubscribed;
+import org.sglnu.eventservice.exception.UserIsNotSubscribedToEvent;
 import org.sglnu.eventservice.mapper.EventMapper;
+import org.sglnu.eventservice.mapper.UserEventMapper;
 import org.sglnu.eventservice.repository.EventRepository;
 import org.sglnu.eventservice.repository.UserEventRepository;
+import org.sglnu.userservice.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -29,6 +33,8 @@ public class UserEventService {
     private final UserEventRepository userEventRepository;
 
     private final EventRepository eventRepository;
+
+    private final UserEventMapper userEventMapper;
 
     private final EventMapper eventMapper;
 
@@ -100,7 +106,7 @@ public class UserEventService {
         UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
                 .orElseThrow(() -> {
                     logger.error("User event not found for user with id={} and event with id={}", userId, eventId);
-                    return new IllegalArgumentException("User event not found");
+                    return new UserIsNotSubscribedToEvent("User event not found", userId, eventId);
                 });
 
         userEventRepository.delete(userEvent);
@@ -111,36 +117,39 @@ public class UserEventService {
     }
 
     @Transactional
-    public void approveUser(Long userId, Long eventId) {
+    public UserEventResponse approveUser(Long userId, Long eventId) {
         logger.info("Attempting to approve user with id={} for event with id={}", userId, eventId);
 
         UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
                 .orElseThrow(() -> {
                     logger.error("User event not found for user with id={} and event with id={}", userId, eventId);
-                    return new IllegalArgumentException("User event not found");
+                    return new UserIsNotSubscribedToEvent("User event not found", userId, eventId);
                 });
 
         userEvent.setStatus(APPROVED);
 
-        userEventRepository.save(userEvent);
+        UserEvent updatedUserEvent = userEventRepository.save(userEvent);
         logger.info("User with id={} has been approved for the event with id={}", userId, eventId);
+
+        return userEventMapper.mapToUserEventResponse(updatedUserEvent);
     }
 
     @Transactional
-    public void rejectUser(Long userId, Long eventId) {
+    public UserEventResponse rejectUser(Long userId, Long eventId) {
         logger.info("Attempting to reject user with id={} for event with id={}", userId, eventId);
 
         UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
                 .orElseThrow(() -> {
                     logger.error("User event not found for user with id={} and event with id={}", userId, eventId);
-                    return new IllegalArgumentException("User event not found");
+                    return new UserIsNotSubscribedToEvent("User event not found", userId, eventId);
                 });
 
         userEvent.setStatus(REJECTED);
 
         userEventRepository.save(userEvent);
         logger.info("User with id={} has been rejected for the event with id={}", userId, eventId);
-    }
 
+        return userEventMapper.mapToUserEventResponse(userEvent);
+    }
 
 }
