@@ -51,4 +51,11 @@ public class UserService {
         return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(UserNotFoundException::new);
     }
 
+    public User findUserByEmail(String email){
+        return userRepository.findUserByEmail(email);
+    }
+
+    public User findUserByPhoneNumber(String phoneNumber){
+        return userRepository.findUserByPhoneNumber(phoneNumber);
+    }
 }

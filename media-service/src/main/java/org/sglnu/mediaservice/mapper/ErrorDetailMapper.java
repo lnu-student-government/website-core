@@ -47,4 +47,5 @@ public interface ErrorDetailMapper {
 
         return new ErrorDetail(typeMismatchException.getPropertyName(), typeMismatchException.getMessage());
     }
+
 }

@@ -8,12 +8,13 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
-import org.sglnu.userservice.common.Faculty;
+import org.sglnu.userservice.validator.annotation.ValidFaculty;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.sglnu.userservice.dto.UserRequest.*;
+import static org.sglnu.userservice.dto.UserRequest.EMAIL_REGEX;
+import static org.sglnu.userservice.dto.UserRequest.PASSWORD_REGEX;
+import static org.sglnu.userservice.dto.UserRequest.PHONE_NUMBER_REGEX;
 
 @Data
 @Builder
@@ -23,6 +24,7 @@ public class RegisterRequest {
     @Email(regexp = EMAIL_REGEX, flags = Pattern.Flag.CASE_INSENSITIVE, message = "Email has to be in a valid format!")
     @Column(unique = true)
     private String email;
+
 
     @NotBlank(message = "Password cannot be empty!")
     @Size(min = 8, message = "Password should be less than 8 symbols")
@@ -34,13 +36,16 @@ public class RegisterRequest {
     @NotBlank(message = "Please repeat the password!")
     private String repeatedPassword;
 
+    @ValidFaculty
     @NotNull(message = "Faculty name cannot be empty!")
-    private Faculty faculty;
+    private String faculty;
 
+    @NotNull(message = "Name cannot be empty")
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Must start with a capital letter")
     private String firstName;
 
+    @NotNull(message = "Surname cannot be empty")
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Must start with a capital letter")
     private String lastName;
