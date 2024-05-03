@@ -2,6 +2,7 @@ package org.sglnu.eventservice.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.sglnu.eventservice.common.EventRegistrationStatus;
 import org.sglnu.eventservice.domain.Event;
 import org.sglnu.eventservice.domain.UserEvent;
 import org.sglnu.eventservice.dto.EventResponses;
@@ -16,7 +17,6 @@ import org.sglnu.eventservice.mapper.EventMapper;
 import org.sglnu.eventservice.mapper.UserEventMapper;
 import org.sglnu.eventservice.repository.EventRepository;
 import org.sglnu.eventservice.repository.UserEventRepository;
-import org.sglnu.userservice.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -64,7 +64,7 @@ public class UserEventService {
                     return new EventNotFoundException("Event of id [%s] couldn't be found".formatted(eventId), eventId, "Event");
                 });
 
-        if (event.getCurrentParticipants().equals(event.getMaxParticipants())) {
+        if (getCurrentParticipants(eventId).equals(event.getMaxParticipants())) {
             logger.error("Event with id={} is full", eventId);
             throw new EventIsFullException("Event is full", eventId, event.getMaxParticipants());
         }
@@ -76,29 +76,14 @@ public class UserEventService {
                             "id=[%s]").formatted(userId, eventId), userId, eventId);
                 });
 
-        userEvent.setEvent(event);
+        userEvent.setStatus(event.getIsPaid() ? PENDING : APPROVED);
+        userEventRepository.save(userEvent);
 
-        Boolean isPaid = event.getIsPaid();
+        String responseMessage = "User of id=[%s] has been successfully subscribed to the event of id=[%s]".formatted(userId, eventId);
+        logger.info(responseMessage, userId, eventId);
 
-        if (isPaid) {
-            userEvent.setStatus(PENDING);
-            userEventRepository.save(userEvent);
-
-            logger.info("User with id={} has been successfully subscribed to the event with id={}", userId, eventId);
-
-            return new SuccessfulSubscriptionResponse("User of id=[%s] has been successfully subscribed to the " +
-                    "event of id=[%s]".formatted(userId, eventId), eventId, userId, PENDING);
-        } else {
-            userEventRepository.save(userEvent);
-            userEvent.setStatus(APPROVED);
-
-            logger.info("User with id={} has been successfully subscribed to the event with id={}", userId, eventId);
-
-            return new SuccessfulSubscriptionResponse("User of id=[%s] has been successfully subscribed to the " +
-                    "event of id=[%s]".formatted(userId, eventId), eventId, userId, APPROVED);
-        }
+        return new SuccessfulSubscriptionResponse(responseMessage, eventId, userId, userEvent.getStatus());
     }
-
     @Transactional
     public SuccessfulUnsubscriptionResponse unsubscribeFromEvent(Long userId, Long eventId){
         logger.info("Attempting to unsubscribe user with id={} from event with id={}", userId, eventId);
@@ -150,6 +135,10 @@ public class UserEventService {
         logger.info("User with id={} has been rejected for the event with id={}", userId, eventId);
 
         return userEventMapper.mapToUserEventResponse(userEvent);
+    }
+
+    public Integer getCurrentParticipants(Long eventId) {
+        return userEventRepository.countByEventIdAndStatus(eventId, EventRegistrationStatus.APPROVED).intValue();
     }
 
 }

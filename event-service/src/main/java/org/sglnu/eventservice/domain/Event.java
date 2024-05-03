@@ -7,13 +7,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.sglnu.eventservice.common.EventRegistrationStatus;
+import org.sglnu.eventservice.repository.UserEventRepository;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
@@ -30,6 +28,7 @@ import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Event {
 
     @Id
@@ -52,17 +51,5 @@ public class Event {
 
     @OneToMany(mappedBy = "event")
     private List<UserEvent> userEvents;
-
-    public Integer getCurrentParticipants() {
-        var approvedUsers = 0;
-
-        for (UserEvent userEvent : userEvents) {
-            if (userEvent.getStatus().equals(EventRegistrationStatus.APPROVED)) {
-                approvedUsers++;
-            }
-        }
-
-        return approvedUsers;
-    }
 
 }
