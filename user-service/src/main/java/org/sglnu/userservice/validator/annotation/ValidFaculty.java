@@ -16,4 +16,5 @@ public @interface ValidFaculty {
     String message() default "Faculty name is not valid";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
+
 }
