@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
-import org.sglnu.userservice.common.Faculty;
+import org.sglnu.userservice.validator.annotation.ValidFaculty;
 
 import java.util.List;
 
@@ -36,8 +36,9 @@ public class RegisterRequest {
     @NotBlank(message = "Please repeat the password!")
     private String repeatedPassword;
 
+    @ValidFaculty
     @NotNull(message = "Faculty name cannot be empty!")
-    private Faculty faculty;
+    private String faculty;
 
     @NotNull(message = "Name cannot be empty")
     @Pattern(regexp = "[A-Z][a-z]+",
@@ -54,7 +55,7 @@ public class RegisterRequest {
 
     @NotBlank(message = "Phone number cannot be empty!")
     @Pattern(regexp = PHONE_NUMBER_REGEX,
-            message = "Phone number has to be in a valid format!")
+            message = "phoneNumber : Phone number has to be in a valid format!")
     private String phoneNumber;
 
     private List<String> categories;

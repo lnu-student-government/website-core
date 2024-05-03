@@ -6,18 +6,21 @@ import org.sglnu.userservice.exception.PasswordMismatchException;
 import org.sglnu.userservice.exception.PhoneNumberAlreadyUsedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler {
 
     private ProblemDetail getProblemDetail(HttpStatus httpStatus, URI type, String title, URI instance,
                                            List<ErrorDetail> details) {
@@ -63,6 +66,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 URI.create(((ServletWebRequest) request).getRequest().getRequestURI()),
                 List.of(new ErrorDetail("Wrong PhoneNumber", ex.getMessage()))
         );
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<List<ProblemDetail>> handleValidationErrors(MethodArgumentNotValidException ex) {
+        List<ErrorDetail> errors = ex.getBindingResult().getFieldErrors()
+                .stream()
+                .map(fieldError -> new ErrorDetail(fieldError.getField(), fieldError.getDefaultMessage()))
+                .collect(Collectors.toList());
+        ProblemDetail problemDetail = getProblemDetail(
+                HttpStatus.BAD_REQUEST,
+                URI.create("about:blank"),
+                "Validation errors",
+                null,
+                errors
+        );
+        
+        List<ProblemDetail> problemDetails = new ArrayList<>();
+        problemDetails.add(problemDetail);
+        return new ResponseEntity<>(problemDetails, HttpStatus.BAD_REQUEST);
     }
 
 }
