@@ -13,5 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long>, QuerydslPredi
     boolean existsByPhoneNumber(String phoneNumber);
 
     Optional<User> findByPhoneNumber(String phoneNumber);
-
+    User findUserByEmail(String email);
+    User findUserByPhoneNumber(String number);
 }

@@ -10,10 +10,11 @@ import lombok.Builder;
 import lombok.Data;
 import org.sglnu.userservice.common.Faculty;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.sglnu.userservice.dto.UserRequest.*;
+import static org.sglnu.userservice.dto.UserRequest.EMAIL_REGEX;
+import static org.sglnu.userservice.dto.UserRequest.PASSWORD_REGEX;
+import static org.sglnu.userservice.dto.UserRequest.PHONE_NUMBER_REGEX;
 
 @Data
 @Builder
@@ -23,6 +24,7 @@ public class RegisterRequest {
     @Email(regexp = EMAIL_REGEX, flags = Pattern.Flag.CASE_INSENSITIVE, message = "Email has to be in a valid format!")
     @Column(unique = true)
     private String email;
+
 
     @NotBlank(message = "Password cannot be empty!")
     @Size(min = 8, message = "Password should be less than 8 symbols")
@@ -37,10 +39,12 @@ public class RegisterRequest {
     @NotNull(message = "Faculty name cannot be empty!")
     private Faculty faculty;
 
+    @NotNull(message = "Name cannot be empty")
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Must start with a capital letter")
     private String firstName;
 
+    @NotNull(message = "Surname cannot be empty")
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Must start with a capital letter")
     private String lastName;
