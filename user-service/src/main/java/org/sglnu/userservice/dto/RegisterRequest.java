@@ -55,7 +55,7 @@ public class RegisterRequest {
 
     @NotBlank(message = "Phone number cannot be empty!")
     @Pattern(regexp = PHONE_NUMBER_REGEX,
-            message = "phoneNumber : Phone number has to be in a valid format!")
+            message = "Phone number has to be in a valid format!")
     private String phoneNumber;
 
     private List<String> categories;

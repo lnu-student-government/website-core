@@ -24,4 +24,3 @@ public class FacultyValidator implements ConstraintValidator<ValidFaculty, Strin
         return false;
     }
 }
-
