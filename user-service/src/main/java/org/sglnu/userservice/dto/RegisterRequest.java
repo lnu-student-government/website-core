@@ -3,22 +3,30 @@ package org.sglnu.userservice.dto;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
-import org.sglnu.userservice.common.Faculty;
+import org.sglnu.userservice.validator.annotation.PasswordsMatch;
+import org.sglnu.userservice.validator.annotation.ValidFaculty;
 
-import static org.sglnu.userservice.dto.UserRequest.*;
+import java.util.List;
+
+import static org.sglnu.userservice.dto.UserRequest.EMAIL_REGEX;
+import static org.sglnu.userservice.dto.UserRequest.PASSWORD_REGEX;
+import static org.sglnu.userservice.dto.UserRequest.PHONE_NUMBER_REGEX;
 
 @Data
 @Builder
+@PasswordsMatch
 public class RegisterRequest {
 
     @NotBlank(message = "Email cannot be empty!")
     @Email(regexp = EMAIL_REGEX, flags = Pattern.Flag.CASE_INSENSITIVE, message = "Email has to be in a valid format!")
     @Column(unique = true)
     private String email;
+
 
     @NotBlank(message = "Password cannot be empty!")
     @Size(min = 8, message = "Password should be less than 8 symbols")
@@ -30,13 +38,16 @@ public class RegisterRequest {
     @NotBlank(message = "Please repeat the password!")
     private String repeatedPassword;
 
-    @NotBlank(message = "Faculty name cannot be empty!")
-    private Faculty faculty;
+    @ValidFaculty
+    @NotNull(message = "Faculty name cannot be empty!")
+    private String faculty;
 
+    @NotNull(message = "Name cannot be empty")
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Must start with a capital letter")
     private String firstName;
 
+    @NotNull(message = "Surname cannot be empty")
     @Pattern(regexp = "[A-Z][a-z]+",
             message = "Must start with a capital letter")
     private String lastName;
@@ -48,5 +59,7 @@ public class RegisterRequest {
     @Pattern(regexp = PHONE_NUMBER_REGEX,
             message = "Phone number has to be in a valid format!")
     private String phoneNumber;
+
+    private List<String> categories;
 
 }

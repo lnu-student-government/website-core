@@ -1,17 +1,21 @@
 package org.sglnu.userservice.service;
 
 import com.querydsl.core.types.Predicate;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.sglnu.userservice.domain.User;
-import org.sglnu.userservice.dto.*;
+import org.sglnu.userservice.dto.RegisterRequest;
+import org.sglnu.userservice.dto.UpdateUserRequest;
+import org.sglnu.userservice.dto.UserResponse;
 import org.sglnu.userservice.exception.UserNotFoundException;
 import org.sglnu.userservice.exception.WrongCredentialsException;
 import org.sglnu.userservice.mapper.UserMapper;
 import org.sglnu.userservice.repository.UserRepository;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,15 +24,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-
-    @Transactional
-    public UserResponse save(RegisterRequest request) {
-        if (userRepository.existsByEmailIgnoreCase(request.getEmail())) {
-            throw new WrongCredentialsException("Email is already taken!", request);
-        }
-
-        User newUser = userRepository.save(userMapper.mapToUser(request));
-        return userMapper.mapToUserResponse(newUser);
+    public User save(RegisterRequest registerRequest) {
+        User user = userMapper.map(registerRequest);
+        return userRepository.save(user);
     }
 
     public UserResponse getById(Long id) {
@@ -58,8 +56,12 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User findByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(UserNotFoundException::new);
+    public Optional<User> findByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
+    }
+
+    public Optional<User> findUserByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 
 }

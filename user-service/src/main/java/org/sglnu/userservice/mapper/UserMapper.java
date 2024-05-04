@@ -10,18 +10,18 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
+import org.sglnu.userservice.mapper.helper.RegisterRequestMappingPasswordEncoder;
 
 @Mapper(componentModel = "spring",
+        uses = RegisterRequestMappingPasswordEncoder.class,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
     @Mapping(target = "role", constant = "USER")
+    @Mapping(target = "faculty", expression = "java(org.sglnu.userservice.common.Faculty.forValue(registerRequest.getFaculty()))")
+    @Mapping(target = "password", qualifiedByName = "encodePassword")
     User map(RegisterRequest registerRequest);
-
-    User mapToUser(UserRequest request);
-
-    User mapToUser(RegisterRequest request);
 
     UserResponse mapToUserResponse(User newUser);
 

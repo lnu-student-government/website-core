@@ -1,6 +1,5 @@
 package org.sglnu.userservice.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sglnu.userservice.dto.AuthenticationRequest;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -25,7 +24,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public AuthenticationResponse register(@Valid @RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response){
-        return authenticationService.authenticate(authenticationRequest, response);
+    public AuthenticationResponse register(@Valid @RequestBody AuthenticationRequest authenticationRequest){
+        return authenticationService.authenticate(authenticationRequest);
     }
 }
