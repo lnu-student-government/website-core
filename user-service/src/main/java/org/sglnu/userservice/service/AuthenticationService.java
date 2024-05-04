@@ -44,7 +44,7 @@ public class AuthenticationService {
         User user = userService.findByPhoneNumber(request.getPhoneNumber());
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new FieldAlreadyUsedException("password", "Email or password is incorrect!");
+            throw new FieldAlreadyUsedException("password", "Phone number or password is incorrect!");
         }
 
         TokenResponse tokenResponse = getTokenResponse(user);
