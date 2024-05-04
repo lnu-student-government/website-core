@@ -2,6 +2,7 @@ package org.sglnu.eventservice.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,9 +13,7 @@ public class EventRequest {
     private LocalDateTime date;
     private String location;
     private Boolean isPaid;
-    private Double price;
+    private BigDecimal price;
     private Integer maxParticipants;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
 }

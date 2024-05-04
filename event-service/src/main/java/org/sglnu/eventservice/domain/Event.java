@@ -28,7 +28,6 @@ import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class Event {
 
     @Id

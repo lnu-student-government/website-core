@@ -1,16 +1,16 @@
 package org.sglnu.eventservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sglnu.eventservice.dto.EventResponses;
-import org.sglnu.eventservice.dto.SuccessfulSubscriptionResponse;
-import org.sglnu.eventservice.dto.SuccessfulUnsubscriptionResponse;
+import org.eclipse.jdt.core.compiler.InvalidInputException;
+import org.sglnu.eventservice.common.EventRegistrationStatus;
+import org.sglnu.eventservice.dto.*;
 import org.sglnu.eventservice.service.UserEventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("users/{userId}/events")
+@RequestMapping("events/{eventId}/users/{userId}")
 public class UserEventController {
 
     private final UserEventService userEventService;
@@ -20,15 +20,20 @@ public class UserEventController {
         return userEventService.getUserEventsSubscribedTo(userId);
     }
 
-    @PostMapping("/{eventId}")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SuccessfulSubscriptionResponse subscribeToEvent(@PathVariable Long userId, @PathVariable Long eventId) {
-        return userEventService.subscribeToEvent(userId, eventId);
-    }
-
-    @DeleteMapping("/{eventId}")
-    public SuccessfulUnsubscriptionResponse unsubscribeFromEvent(@PathVariable Long userId, @PathVariable Long eventId) {
-        return userEventService.unsubscribeFromEvent(userId, eventId);
+    public SubscriptionResponse manageSubscription(@RequestBody SubscriptionRequest request) throws InvalidInputException {
+        if ("subscribe".equals(request.getAction())) {
+            userEventService.subscribeToEvent(request.getUserId(), request.getEventId());
+            return new SubscriptionResponse("User subscribed to event", request.getEventId(), request.getUserId(),
+                    EventRegistrationStatus.APPROVED);
+        } else if ("unsubscribe".equals(request.getAction())) {
+            userEventService.unsubscribeFromEvent(request.getUserId(), request.getEventId());
+            return new SubscriptionResponse("User unsubscribed from event", request.getEventId(), request.getUserId(),
+                    EventRegistrationStatus.UNSUBSCRIBED);
+        } else {
+            throw new InvalidInputException("Invalid action");
+        }
     }
 
     @PutMapping("/{eventId}/approve")

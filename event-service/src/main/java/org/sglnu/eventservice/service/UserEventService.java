@@ -76,7 +76,8 @@ public class UserEventService {
                             "id=[%s]").formatted(userId, eventId), userId, eventId);
                 });
 
-        userEvent.setStatus(event.getIsPaid() ? PENDING : APPROVED);
+        boolean isPaidOrLimited = event.getIsPaid() || getCurrentParticipants(eventId).equals(event.getMaxParticipants());
+        userEvent.setStatus(isPaidOrLimited ? PENDING : APPROVED);
         userEventRepository.save(userEvent);
 
         String responseMessage = "User of id=[%s] has been successfully subscribed to the event of id=[%s]".formatted(userId, eventId);
@@ -84,6 +85,7 @@ public class UserEventService {
 
         return new SuccessfulSubscriptionResponse(responseMessage, eventId, userId, userEvent.getStatus());
     }
+
     @Transactional
     public SuccessfulUnsubscriptionResponse unsubscribeFromEvent(Long userId, Long eventId){
         logger.info("Attempting to unsubscribe user with id={} from event with id={}", userId, eventId);
