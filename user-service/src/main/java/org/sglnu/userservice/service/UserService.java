@@ -13,20 +13,19 @@ import org.sglnu.userservice.mapper.UserMapper;
 import org.sglnu.userservice.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     public User save(RegisterRequest registerRequest) {
         User user = userMapper.map(registerRequest);
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         return userRepository.save(user);
     }
 
@@ -57,15 +56,12 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User findByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber).orElseThrow(UserNotFoundException::new);
+    public Optional<User> findByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
     }
 
-    public User findUserByEmail(String email){
-        return userRepository.findUserByEmail(email);
+    public Optional<User> findUserByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 
-    public User findUserByPhoneNumber(String phoneNumber){
-        return userRepository.findUserByPhoneNumber(phoneNumber);
-    }
 }

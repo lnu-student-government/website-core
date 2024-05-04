@@ -10,12 +10,15 @@ import org.sglnu.userservice.dto.AuthenticationResponse;
 import org.sglnu.userservice.dto.RegisterRequest;
 import org.sglnu.userservice.dto.TokenResponse;
 import org.sglnu.userservice.exception.FieldAlreadyUsedException;
+import org.sglnu.userservice.exception.FieldAlreadyUsedExceptions;
+import org.sglnu.userservice.exception.UserNotFoundException;
 import org.sglnu.userservice.mapper.UserMapper;
 import org.sglnu.userservice.security.UsersDetails;
 import org.sglnu.userservice.security.auth.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,7 +44,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        User user = userService.findByPhoneNumber(request.getPhoneNumber());
+        User user = userService.findByPhoneNumber(request.getPhoneNumber()).orElseThrow(UserNotFoundException::new);
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new FieldAlreadyUsedException("password", "Phone number or password is incorrect!");
@@ -52,10 +55,16 @@ public class AuthenticationService {
     }
 
     private void checkIfUserAlreadyExists(RegisterRequest registerRequest) {
-        if (userService.findUserByEmail(registerRequest.getEmail()) != null) {
-            throw new FieldAlreadyUsedException("email", "Email already used");
-        } else if (userService.findUserByPhoneNumber(registerRequest.getPhoneNumber()) != null) {
-            throw new FieldAlreadyUsedException("phoneNumber", "Phone number already used");
+        List<FieldAlreadyUsedException> validationErrors = new ArrayList<>();
+
+        userService.findUserByEmail(registerRequest.getEmail())
+                .ifPresent(user -> validationErrors.add(new FieldAlreadyUsedException("email", "Email already used")));
+
+        userService.findByPhoneNumber(registerRequest.getPhoneNumber())
+                .ifPresent(user -> validationErrors.add(new FieldAlreadyUsedException("phoneNumber", "Phone number already used")));
+
+        if (!validationErrors.isEmpty()) {
+            throw new FieldAlreadyUsedExceptions(validationErrors);
         }
     }
 

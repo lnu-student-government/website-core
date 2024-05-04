@@ -1,7 +1,7 @@
 package org.sglnu.userservice.exception.handler;
 
 import org.sglnu.userservice.dto.ErrorDetail;
-import org.sglnu.userservice.exception.FieldAlreadyUsedException;
+import org.sglnu.userservice.exception.FieldAlreadyUsedExceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -30,15 +28,19 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
-    @ExceptionHandler({FieldAlreadyUsedException.class})
+    @ExceptionHandler({FieldAlreadyUsedExceptions.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleEmailAlreadyUsedException(FieldAlreadyUsedException ex, WebRequest request) {
+    public ProblemDetail handleEmailAlreadyUsedException(FieldAlreadyUsedExceptions ex, WebRequest request) {
+        List<ErrorDetail> fieldErrors = ex.getExceptions().stream()
+                .map(fieldError -> new ErrorDetail(fieldError.getFieldName(), fieldError.getMessage()))
+                .toList();
+
         return getProblemDetail(
                 HttpStatus.BAD_REQUEST,
                 URI.create("about:blank"),
                 "Email was already used",
                 URI.create(((ServletWebRequest) request).getRequest().getRequestURI()),
-                List.of(new ErrorDetail("email", ex.getMessage()))
+                fieldErrors
         );
     }
 
