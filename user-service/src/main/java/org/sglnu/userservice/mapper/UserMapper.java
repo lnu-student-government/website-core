@@ -17,11 +17,8 @@ import org.mapstruct.ReportingPolicy;
 public interface UserMapper {
 
     @Mapping(target = "role", constant = "USER")
+    @Mapping(target = "faculty", expression = "java(Faculty.forValue(registerRequest.getFaculty()))")
     User map(RegisterRequest registerRequest);
-
-    User mapToUser(UserRequest request);
-
-    User mapToUser(RegisterRequest request);
 
     UserResponse mapToUserResponse(User newUser);
 
