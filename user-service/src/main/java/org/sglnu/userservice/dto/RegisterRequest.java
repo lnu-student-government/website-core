@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
+import org.sglnu.userservice.validator.annotation.PasswordsMatch;
 import org.sglnu.userservice.validator.annotation.ValidFaculty;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import static org.sglnu.userservice.dto.UserRequest.PHONE_NUMBER_REGEX;
 
 @Data
 @Builder
+@PasswordsMatch
 public class RegisterRequest {
 
     @NotBlank(message = "Email cannot be empty!")

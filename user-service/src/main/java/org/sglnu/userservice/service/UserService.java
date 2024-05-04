@@ -1,16 +1,19 @@
 package org.sglnu.userservice.service;
 
 import com.querydsl.core.types.Predicate;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.sglnu.userservice.domain.User;
-import org.sglnu.userservice.dto.*;
+import org.sglnu.userservice.dto.RegisterRequest;
+import org.sglnu.userservice.dto.UpdateUserRequest;
+import org.sglnu.userservice.dto.UserResponse;
 import org.sglnu.userservice.exception.UserNotFoundException;
 import org.sglnu.userservice.exception.WrongCredentialsException;
 import org.sglnu.userservice.mapper.UserMapper;
 import org.sglnu.userservice.repository.UserRepository;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +21,14 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+
+    public User save(RegisterRequest registerRequest) {
+        User user = userMapper.map(registerRequest);
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        return userRepository.save(user);
+    }
 
     public UserResponse getById(Long id) {
         return userRepository.findById(id)

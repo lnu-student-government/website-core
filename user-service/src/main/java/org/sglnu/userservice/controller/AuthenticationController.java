@@ -25,7 +25,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public AuthenticationResponse register(@Valid @RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response){
-        return authenticationService.authenticate(authenticationRequest, response);
+    public AuthenticationResponse register(@Valid @RequestBody AuthenticationRequest authenticationRequest){
+        return authenticationService.authenticate(authenticationRequest);
     }
 }

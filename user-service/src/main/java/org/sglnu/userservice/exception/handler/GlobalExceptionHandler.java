@@ -43,22 +43,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ProblemDetail>> handleValidationErrors(MethodArgumentNotValidException ex) {
-        List<ErrorDetail> errors = ex.getBindingResult().getFieldErrors()
+    public ResponseEntity<ProblemDetail> handleValidationErrors(MethodArgumentNotValidException ex) {
+        List<ErrorDetail> fieldErrors = ex.getBindingResult().getFieldErrors()
                 .stream()
                 .map(fieldError -> new ErrorDetail(fieldError.getField(), fieldError.getDefaultMessage()))
-                .collect(Collectors.toList());
+                .toList();
+
         ProblemDetail problemDetail = getProblemDetail(
                 HttpStatus.BAD_REQUEST,
                 URI.create("about:blank"),
                 "Validation errors",
                 null,
-                errors
+                fieldErrors
         );
 
-        List<ProblemDetail> problemDetails = new ArrayList<>();
-        problemDetails.add(problemDetail);
-        return new ResponseEntity<>(problemDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
     }
 
 }
