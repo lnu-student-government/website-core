@@ -2,13 +2,12 @@ package org.sglnu.eventservice.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.jdt.core.compiler.InvalidInputException;
 import org.sglnu.eventservice.common.EventRegistrationStatus;
+import org.sglnu.eventservice.common.UserEventStatus;
 import org.sglnu.eventservice.domain.Event;
 import org.sglnu.eventservice.domain.UserEvent;
-import org.sglnu.eventservice.dto.EventResponses;
-import org.sglnu.eventservice.dto.SuccessfulSubscriptionResponse;
-import org.sglnu.eventservice.dto.SuccessfulUnsubscriptionResponse;
-import org.sglnu.eventservice.dto.UserEventResponse;
+import org.sglnu.eventservice.dto.*;
 import org.sglnu.eventservice.exception.EventIsFullException;
 import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.exception.UserIsAlreadySubscribed;
@@ -34,13 +33,12 @@ public class UserEventService {
 
     private final EventRepository eventRepository;
 
-    private final UserEventMapper userEventMapper;
-
     private final EventMapper eventMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(UserEventService.class);
 
-    public EventResponses getUserEventsSubscribedTo(Long userId){
+
+    public EventResponses getUserEventsSubscribedTo(Long userId) {
         logger.info("Fetching events subscribed by user with id={}", userId);
 
         List<UserEvent> userEvents = userEventRepository.findByUserId(userId);
@@ -55,7 +53,7 @@ public class UserEventService {
     }
 
     @Transactional
-    public SuccessfulSubscriptionResponse subscribeToEvent(Long userId, Long eventId){
+    public SuccessfulSubscriptionResponse subscribeToEvent(Long userId, Long eventId) {
         logger.info("Attempting to subscribe user with id={} to event with id={}", userId, eventId);
 
         Event event = eventRepository.findById(eventId)
@@ -87,7 +85,7 @@ public class UserEventService {
     }
 
     @Transactional
-    public SuccessfulUnsubscriptionResponse unsubscribeFromEvent(Long userId, Long eventId){
+    public SuccessfulUnsubscriptionResponse unsubscribeFromEvent(Long userId, Long eventId) {
         logger.info("Attempting to unsubscribe user with id={} from event with id={}", userId, eventId);
 
         UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
@@ -103,44 +101,32 @@ public class UserEventService {
                 "event of id=[%s]").formatted(userId, eventId), eventId, userId, UNSUBSCRIBED);
     }
 
-    @Transactional
-    public UserEventResponse approveUser(Long userId, Long eventId) {
-        logger.info("Attempting to approve user with id={} for event with id={}", userId, eventId);
-
-        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
-                .orElseThrow(() -> {
-                    logger.error("User event not found for user with id={} and event with id={}", userId, eventId);
-                    return new UserIsNotSubscribedToEvent("User event not found", userId, eventId);
-                });
-
-        userEvent.setStatus(APPROVED);
-
-        UserEvent updatedUserEvent = userEventRepository.save(userEvent);
-        logger.info("User with id={} has been approved for the event with id={}", userId, eventId);
-
-        return userEventMapper.mapToUserEventResponse(updatedUserEvent);
-    }
-
-    @Transactional
-    public UserEventResponse rejectUser(Long userId, Long eventId) {
-        logger.info("Attempting to reject user with id={} for event with id={}", userId, eventId);
-
-        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
-                .orElseThrow(() -> {
-                    logger.error("User event not found for user with id={} and event with id={}", userId, eventId);
-                    return new UserIsNotSubscribedToEvent("User event not found", userId, eventId);
-                });
-
-        userEvent.setStatus(REJECTED);
-
-        userEventRepository.save(userEvent);
-        logger.info("User with id={} has been rejected for the event with id={}", userId, eventId);
-
-        return userEventMapper.mapToUserEventResponse(userEvent);
-    }
-
     public Integer getCurrentParticipants(Long eventId) {
         return userEventRepository.countByEventIdAndStatus(eventId, EventRegistrationStatus.APPROVED).intValue();
+    }
+
+    @Transactional
+    public SubscriptionResponse manageSubscription(Long userId, Long eventId, UserEventStatus action) throws InvalidInputException {
+        logger.info("Managing subscription for user with id={} and event with id={}, action={}", userId, eventId, action);
+        SubscriptionResponse response;
+        switch (action) {
+            case SUBSCRIBED:
+                this.subscribeToEvent(userId, eventId);
+                response = new SubscriptionResponse("User subscribed to event", eventId, userId,
+                        EventRegistrationStatus.APPROVED);
+                logger.info("User with id={} subscribed to event with id={}", userId, eventId);
+                break;
+            case UNSUBSCRIBED:
+                this.unsubscribeFromEvent(userId, eventId);
+                response = new SubscriptionResponse("User unsubscribed from event", eventId, userId,
+                        EventRegistrationStatus.UNSUBSCRIBED);
+                logger.info("User with id={} unsubscribed from event with id={}", userId, eventId);
+                break;
+            default:
+                logger.error("Invalid action: {}", action);
+                throw new InvalidInputException("Invalid action");
+        }
+        return response;
     }
 
 }
