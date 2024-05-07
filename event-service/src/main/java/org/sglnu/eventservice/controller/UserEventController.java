@@ -22,7 +22,7 @@ public class UserEventController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SubscriptionResponse manageSubscription(@RequestBody SubscriptionRequest request) throws InvalidInputException {
+    public SubscriptionResponse manageSubscription(@RequestBody SubscriptionRequest request) {
         return userEventService.manageSubscription(request.getUserId(), request.getEventId(), request.getAction());
     }
 

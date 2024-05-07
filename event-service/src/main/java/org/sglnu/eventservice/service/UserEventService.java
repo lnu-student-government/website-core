@@ -2,9 +2,7 @@ package org.sglnu.eventservice.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.jdt.core.compiler.InvalidInputException;
 import org.sglnu.eventservice.common.EventRegistrationStatus;
-import org.sglnu.eventservice.common.UserEventStatus;
 import org.sglnu.eventservice.domain.Event;
 import org.sglnu.eventservice.domain.UserEvent;
 import org.sglnu.eventservice.dto.*;
@@ -13,7 +11,6 @@ import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.exception.UserIsAlreadySubscribed;
 import org.sglnu.eventservice.exception.UserIsNotSubscribedToEvent;
 import org.sglnu.eventservice.mapper.EventMapper;
-import org.sglnu.eventservice.mapper.UserEventMapper;
 import org.sglnu.eventservice.repository.EventRepository;
 import org.sglnu.eventservice.repository.UserEventRepository;
 import org.slf4j.Logger;
@@ -75,7 +72,7 @@ public class UserEventService {
                 });
 
         boolean isPaidOrLimited = event.getIsPaid() || getCurrentParticipants(eventId).equals(event.getMaxParticipants());
-        userEvent.setStatus(isPaidOrLimited ? PENDING : APPROVED);
+        userEvent.setStatus(isPaidOrLimited ? PENDING : SUBSCRIBED);
         userEventRepository.save(userEvent);
 
         String responseMessage = "User of id=[%s] has been successfully subscribed to the event of id=[%s]".formatted(userId, eventId);
@@ -102,31 +99,16 @@ public class UserEventService {
     }
 
     public Integer getCurrentParticipants(Long eventId) {
-        return userEventRepository.countByEventIdAndStatus(eventId, EventRegistrationStatus.APPROVED).intValue();
+        return userEventRepository.countByEventIdAndStatus(eventId, SUBSCRIBED).intValue();
     }
 
     @Transactional
-    public SubscriptionResponse manageSubscription(Long userId, Long eventId, UserEventStatus action) throws InvalidInputException {
+    public SubscriptionResponse manageSubscription(Long userId, Long eventId, EventRegistrationStatus action) {
         logger.info("Managing subscription for user with id={} and event with id={}, action={}", userId, eventId, action);
-        SubscriptionResponse response;
-        switch (action) {
-            case SUBSCRIBED:
-                this.subscribeToEvent(userId, eventId);
-                response = new SubscriptionResponse("User subscribed to event", eventId, userId,
-                        EventRegistrationStatus.APPROVED);
-                logger.info("User with id={} subscribed to event with id={}", userId, eventId);
-                break;
-            case UNSUBSCRIBED:
-                this.unsubscribeFromEvent(userId, eventId);
-                response = new SubscriptionResponse("User unsubscribed from event", eventId, userId,
-                        EventRegistrationStatus.UNSUBSCRIBED);
-                logger.info("User with id={} unsubscribed from event with id={}", userId, eventId);
-                break;
-            default:
-                logger.error("Invalid action: {}", action);
-                throw new InvalidInputException("Invalid action");
-        }
-        return response;
+        userEventRepository.updateUserEventStatus(userId, eventId, action);
+        logger.info("User with id={} {} event with id={}", userId, action.name().toLowerCase(), eventId);
+        return new SubscriptionResponse("User with id=[%s] %s event with id=[%s]"
+                .formatted(userId, action.name().toLowerCase(), eventId), eventId, userId, action);
     }
 
 }
