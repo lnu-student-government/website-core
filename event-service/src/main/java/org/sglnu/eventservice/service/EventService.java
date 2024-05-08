@@ -2,24 +2,14 @@ package org.sglnu.eventservice.service;
 
 import com.querydsl.core.types.Predicate;
 import org.sglnu.eventservice.domain.Event;
-import org.sglnu.eventservice.domain.UserEvent;
 import org.sglnu.eventservice.dto.*;
-import org.sglnu.eventservice.exception.EventIsFullException;
-import org.sglnu.eventservice.exception.EventNotFoundException;
-import org.sglnu.eventservice.exception.UserIsAlreadySubscribed;
 import org.sglnu.eventservice.mapper.EventMapper;
 import org.sglnu.eventservice.repository.EventRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.sglnu.eventservice.repository.UserEventRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.sglnu.eventservice.common.EventRegistrationStatus.*;
 
 @RequiredArgsConstructor
 @Service

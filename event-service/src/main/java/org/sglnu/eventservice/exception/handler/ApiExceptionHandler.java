@@ -1,11 +1,9 @@
 package org.sglnu.eventservice.exception.handler;
 
-import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sglnu.eventservice.dto.ErrorDetail;
 import org.sglnu.eventservice.exception.EventIsFullException;
-import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.exception.UserIsAlreadySubscribed;
 import org.sglnu.eventservice.exception.UserIsNotSubscribedToEvent;
 import org.sglnu.eventservice.mapper.ErrorDetailMapper;
@@ -30,18 +28,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final ErrorDetailMapper errorDetailMapper;
-
-    @ExceptionHandler({ EventNotFoundException.class })
-    @ResponseStatus(NOT_FOUND)
-    public ProblemDetail handleEventNotFoundException(EventNotFoundException ex, WebRequest request) {
-        return getProblemDetail(
-                NOT_FOUND,
-                URI.create("about:blank"),
-                "Event not found!",
-                URI.create(((ServletWebRequest) request).getRequest().getRequestURI()),
-                List.of(errorDetailMapper.from(ex))
-        );
-    }
 
     @ExceptionHandler({ EventIsFullException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
