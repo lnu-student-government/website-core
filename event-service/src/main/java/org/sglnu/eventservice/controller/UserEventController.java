@@ -1,5 +1,6 @@
 package org.sglnu.eventservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.jdt.core.compiler.InvalidInputException;
 import org.sglnu.eventservice.common.EventRegistrationStatus;
@@ -21,9 +22,10 @@ public class UserEventController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
+    @Valid
     public SubscriptionResponse manageSubscription(@RequestBody SubscriptionRequest request) {
-        return userEventService.manageSubscription(request.getUserId(), request.getEventId(), request.getAction());
+        return userEventService.manageSubscription(request);
     }
 
 }

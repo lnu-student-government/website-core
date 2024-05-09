@@ -10,6 +10,6 @@ public class SubscriptionRequest {
 
     private Long eventId;
     private Long userId;
-    private EventRegistrationStatus action;
+    private EventRegistrationStatus status;
 
 }
