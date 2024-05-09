@@ -27,15 +27,15 @@ public class UserCategoryService {
 
     @Transactional
     public List<UserCategoryResponse> saveAll(UserCategoryRequests userCategoryRequests) {
-        List<UserCategory> toAdd = new ArrayList<>();
         List<UserCategoryWithObject> categories = userCategoryRequests.getUserCategoryRequests().stream()
                 .map(this::toUserCategoryWithCategoryAsObject)
-                .peek(userCategory -> {
-                    if (userCategory.getStatus() == CategoryMappingStatus.SUCCESS) {
-                        toAdd.add(userCategoryMapper.toUserCategory(userCategory));
-                    }
-                })
                 .toList();
+
+        List<UserCategory> toAdd = categories.stream()
+                .filter(userCategoryWithObject -> userCategoryWithObject.getStatus().equals(CategoryMappingStatus.SUCCESS))
+                .map(userCategoryMapper::toUserCategory)
+                .toList();
+
 
         userCategoryRepository.saveAll(toAdd);
         return userCategoryMapper.toUserCategoryResponseList(categories);
