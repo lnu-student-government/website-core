@@ -46,9 +46,7 @@ public class UserEventService {
 
         userEventRepository.updateUserEventStatus(request.getUserId(), request.getEventId(), request.getStatus());
 
-        return new SubscriptionResponse("User with id=[%s] %s event with id=[%s]"
-                .formatted(request.getUserId(), request.getStatus().equals(SUBSCRIBE) ? "subscribed to" : "unsubscribed from", request.getEventId()),
-                request.getEventId(), request.getUserId(), request.getStatus());
+        return new SubscriptionResponse(request.getEventId(), request.getUserId(), request.getStatus());
     }
 
 }

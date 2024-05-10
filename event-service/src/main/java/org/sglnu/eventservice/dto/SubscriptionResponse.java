@@ -8,7 +8,6 @@ import org.sglnu.eventservice.common.EventRegistrationStatus;
 @AllArgsConstructor
 public class SubscriptionResponse {
 
-    private String message;
     private Long eventId;
     private Long userId;
     private EventRegistrationStatus status;

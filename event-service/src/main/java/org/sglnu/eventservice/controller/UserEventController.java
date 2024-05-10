@@ -22,9 +22,7 @@ public class UserEventController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    @Valid
-    public SubscriptionResponse manageSubscription(@RequestBody SubscriptionRequest request) {
+    public SubscriptionResponse manageSubscription(@Valid @RequestBody SubscriptionRequest request) {
         return userEventService.manageSubscription(request);
     }
 
