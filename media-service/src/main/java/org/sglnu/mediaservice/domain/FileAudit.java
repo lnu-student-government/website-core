@@ -1,7 +1,5 @@
 package org.sglnu.mediaservice.domain;
 
-import org.sglnu.mediaservice.domain.datatype.InteractionType;
-import org.sglnu.mediaservice.validator.annotation.IpV4;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -17,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.sglnu.mediaservice.domain.datatype.InteractionType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -38,7 +37,6 @@ public class FileAudit {
     @Column(updatable = false)
     private Long userId;
 
-    @IpV4
     private String userIp;
 
     @NotNull

@@ -3,7 +3,7 @@ package org.sglnu.mediaservice.configuration;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
 import lombok.RequiredArgsConstructor;
-import org.sglnu.mediaservice.configuration.properties.AzureProperties.BlobProperties;
+import org.sglnu.mediaservice.configuration.properties.BlobProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,7 +17,7 @@ public class BlobStorageConfiguration {
     public BlobContainerClient blobContainerClient() {
         return new BlobContainerClientBuilder()
                 .connectionString(blobProperties.connectionString())
-                .containerName(blobProperties.containerName())
+                .containerName(blobProperties.getContainerName())
                 .buildClient();
     }
 

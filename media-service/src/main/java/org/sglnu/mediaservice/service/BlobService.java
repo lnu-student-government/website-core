@@ -5,10 +5,10 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.sas.BlobSasPermission;
 import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
 import com.azure.storage.common.sas.SasProtocol;
-import org.sglnu.mediaservice.configuration.properties.AzureProperties.SasAccessProperties;
-import org.sglnu.mediaservice.domain.datatype.InteractionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.sglnu.mediaservice.configuration.properties.SasAccessProperties;
+import org.sglnu.mediaservice.domain.datatype.InteractionType;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -25,7 +25,7 @@ public class BlobService {
         BlobSasPermission sasPermission = BlobSasPermission.parse(permission.getStringRepresentation());
 
         BlobServiceSasSignatureValues sasValues =
-                new BlobServiceSasSignatureValues(OffsetDateTime.now().plusSeconds(sasAccessProperties.accessDuration()), sasPermission)
+                new BlobServiceSasSignatureValues(OffsetDateTime.now().plusSeconds(sasAccessProperties.getAccessDuration()), sasPermission)
                         .setProtocol(SasProtocol.HTTPS_ONLY)
                         .setCacheControl("no-cache");
 

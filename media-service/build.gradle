@@ -70,5 +70,9 @@ tasks.named('test') {
 }
 
 bootJar{
-    mainClass = 'org.sglnu.userservice.UserServiceApplication'
+    mainClass = 'org.sglnu.mediaservice.MediaServiceApplication'
+}
+
+bootRun{
+    systemProperty("java.net.preferIPv4Stack", true)
 }
