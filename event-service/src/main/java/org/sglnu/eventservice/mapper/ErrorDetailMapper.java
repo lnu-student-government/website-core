@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.sglnu.eventservice.dto.ErrorDetail;
 import org.sglnu.eventservice.exception.EventIsFullException;
+import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.exception.UserIsAlreadySubscribed;
 import org.sglnu.eventservice.exception.UserIsNotSubscribedToEvent;
 
@@ -23,5 +24,10 @@ public interface ErrorDetailMapper {
     @Mapping(target = "message", expression = "java(\"User of id=[%s] is not subscribed to Event " +
             "of id=[%s]\".formatted(ex.getUserId(), ex.getEventId()))")
     ErrorDetail from(UserIsNotSubscribedToEvent ex);
+
+    @Mapping(target = "cause", expression = "java(\"id\")")
+    @Mapping(target = "message", expression = "java(\"Event of id=[%s] is not found\"" +
+            ".formatted(ex.getUserId(), ex.getEventId()))")
+    ErrorDetail from(EventNotFoundException ex);
 
 }

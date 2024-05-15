@@ -7,8 +7,9 @@ import org.sglnu.eventservice.common.EventRegistrationStatus;
 import org.sglnu.eventservice.domain.Event;
 import org.sglnu.eventservice.domain.UserEvent;
 import org.sglnu.eventservice.dto.*;
-import org.sglnu.eventservice.exception.UserIsNotSubscribedToEvent;
+import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.mapper.EventMapper;
+import org.sglnu.eventservice.repository.EventRepository;
 import org.sglnu.eventservice.repository.UserEventRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.sglnu.eventservice.common.EventRegistrationStatus.*;
-import static reactor.core.publisher.SignalType.SUBSCRIBE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,6 +24,8 @@ import static reactor.core.publisher.SignalType.SUBSCRIBE;
 public class UserEventService {
 
     private final UserEventRepository userEventRepository;
+
+    private final EventRepository eventRepository;
 
     private final EventMapper eventMapper;
 
@@ -40,13 +42,37 @@ public class UserEventService {
 
     @Transactional
     public SubscriptionResponse manageSubscription(SubscriptionRequest request) {
-        userEventRepository.findByUserIdAndEventId(request.getUserId(), request.getEventId())
-                        .orElseThrow(() -> new UserIsNotSubscribedToEvent("User with id=[%s] is not subscribed to event with id=[%s]"
-                                .formatted(request.getUserId(), request.getEventId()), request.getUserId(), request.getEventId()));
+        Event event = eventRepository.findById(request.getEventId())
+                .orElseThrow(() -> new EventNotFoundException("Event not found", request.getEventId()));
 
-        userEventRepository.updateUserEventStatus(request.getUserId(), request.getEventId(), request.getStatus());
+        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(request.getUserId(), request.getEventId())
+                .orElseGet(() -> getUserEvent(request.getUserId(), event));
+
+        if (userEvent.getId() != null) {
+            userEvent.setStatus(request.getStatus());
+        }
+
+        userEventRepository.save(userEvent);
 
         return new SubscriptionResponse(request.getEventId(), request.getUserId(), request.getStatus());
+    }
+
+    private UserEvent getUserEvent(Long userId, Event event) {
+        return UserEvent.builder()
+                .userId(userId)
+                .event(event)
+                .status(getSubscriptionStatus(event))
+                .build();
+    }
+
+    private EventRegistrationStatus getSubscriptionStatus(Event event) {
+        if (Boolean.TRUE.equals(event.getIsPaid())) {
+            return PENDING;
+        } else if (Boolean.FALSE.equals(event.getIsPaid())) {
+            return SUBSCRIBED;
+        } else {
+            return REJECTED;
+        }
     }
 
 }

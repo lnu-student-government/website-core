@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sglnu.eventservice.dto.ErrorDetail;
 import org.sglnu.eventservice.exception.EventIsFullException;
+import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.exception.UserIsAlreadySubscribed;
 import org.sglnu.eventservice.exception.UserIsNotSubscribedToEvent;
 import org.sglnu.eventservice.mapper.ErrorDetailMapper;
@@ -56,6 +57,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ UserIsNotSubscribedToEvent.class })
     @ResponseStatus(NOT_FOUND)
     public ProblemDetail handleUserIsNotSubscribedToEvent(UserIsNotSubscribedToEvent ex, WebRequest request) {
+        return getProblemDetail(
+                NOT_FOUND,
+                URI.create("about:blank"),
+                "User is not subscribed to event!",
+                URI.create(((ServletWebRequest) request).getRequest().getRequestURI()),
+                List.of(errorDetailMapper.from(ex))
+        );
+    }
+
+    @ExceptionHandler({ EventNotFoundException.class })
+    @ResponseStatus(NOT_FOUND)
+    public ProblemDetail handleEventNotFoundException(EventNotFoundException ex, WebRequest request) {
         return getProblemDetail(
                 NOT_FOUND,
                 URI.create("about:blank"),
