@@ -8,12 +8,14 @@ import org.sglnu.eventservice.domain.Event;
 import org.sglnu.eventservice.domain.UserEvent;
 import org.sglnu.eventservice.dto.*;
 import org.sglnu.eventservice.exception.EventNotFoundException;
+import org.sglnu.eventservice.exception.UserIsNotSubscribedToEvent;
 import org.sglnu.eventservice.mapper.EventMapper;
 import org.sglnu.eventservice.repository.EventRepository;
 import org.sglnu.eventservice.repository.UserEventRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.sglnu.eventservice.common.EventRegistrationStatus.*;
@@ -46,7 +48,7 @@ public class UserEventService {
                 .orElseThrow(() -> new EventNotFoundException("Event not found", request.getEventId()));
 
         UserEvent userEvent = userEventRepository.findByUserIdAndEventId(request.getUserId(), request.getEventId())
-                .orElseGet(() -> getUserEvent(request.getUserId(), event));
+                .orElseGet(() -> createUserEvent(request.getUserId(), event));
 
         if (userEvent.getId() != null) {
             userEvent.setStatus(request.getStatus());
@@ -57,7 +59,7 @@ public class UserEventService {
         return new SubscriptionResponse(request.getEventId(), request.getUserId(), request.getStatus());
     }
 
-    private UserEvent getUserEvent(Long userId, Event event) {
+    private UserEvent createUserEvent(Long userId, Event event) {
         return UserEvent.builder()
                 .userId(userId)
                 .event(event)
@@ -66,13 +68,22 @@ public class UserEventService {
     }
 
     private EventRegistrationStatus getSubscriptionStatus(Event event) {
-        if (Boolean.TRUE.equals(event.getIsPaid())) {
-            return PENDING;
-        } else if (Boolean.FALSE.equals(event.getIsPaid())) {
-            return SUBSCRIBED;
-        } else {
-            return REJECTED;
-        }
+        return (event.getIsPaid() || Optional.ofNullable(event.getMaxParticipants()).orElse(0) > 0) ? PENDING : SUBSCRIBED;
     }
 
+    @Transactional
+    public SubscriptionResponse rejectParticipant(Long eventId, Long userId) {
+        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
+                .orElseThrow(() -> new UserIsNotSubscribedToEvent("User is not subscribed to this event", userId, eventId));
+
+        userEvent.setStatus(REJECTED);
+
+        userEventRepository.save(userEvent);
+
+        return SubscriptionResponse.builder()
+                .eventId(eventId)
+                .userId(userId)
+                .status(REJECTED)
+                .build();
+    }
 }

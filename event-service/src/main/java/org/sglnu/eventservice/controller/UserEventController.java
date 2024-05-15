@@ -26,4 +26,9 @@ public class UserEventController {
         return userEventService.manageSubscription(request);
     }
 
+    @PutMapping("/reject")
+    public SubscriptionResponse rejectParticipant(@PathVariable Long eventId, @PathVariable Long userId) {
+            return userEventService.rejectParticipant(eventId, userId);
+    }
+
 }
