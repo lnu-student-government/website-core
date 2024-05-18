@@ -2,8 +2,8 @@ package org.sglnu.eventservice.service;
 
 import com.querydsl.core.types.Predicate;
 import org.sglnu.eventservice.domain.Event;
-import org.sglnu.eventservice.dto.EventRequest;
-import org.sglnu.eventservice.dto.EventResponse;
+import org.sglnu.eventservice.dto.*;
+import org.sglnu.eventservice.exception.EventNotFoundException;
 import org.sglnu.eventservice.mapper.EventMapper;
 import org.sglnu.eventservice.repository.EventRepository;
 import jakarta.transaction.Transactional;
@@ -31,7 +31,7 @@ public class EventService {
     public EventResponse getById(Long id) {
         return eventRepository.findById(id)
                 .map(eventMapper::mapToEventResponse)
-                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+                .orElseThrow(() -> new EventNotFoundException("Event not found", id));
     }
 
     public Page<EventResponse> getAll(Pageable pageable, Predicate filter) {
@@ -41,16 +41,9 @@ public class EventService {
 
     public EventResponse update(Long id, EventRequest eventRequest) {
         Event eventToUpdate = eventRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+                .orElseThrow(() -> new EventNotFoundException("Event not found", id));
 
-        //TODO: Volodymyr, please use mapper instead
-//        eventToUpdate.setName(eventRequest.getName());
-//        eventToUpdate.setDescription(eventRequest.getDescription());
-//        eventToUpdate.setLocation(eventRequest.getLocation());
-//        eventToUpdate.setPhotoId(eventRequest.getPhotoId());
-//        eventToUpdate.setDate(eventRequest.getDate());
-//        eventToUpdate.setCategories(eventRequest.getCategories());
-
+        eventMapper.updateEventFromRequest(eventRequest, eventToUpdate);
         return eventMapper.mapToEventResponse(eventRepository.save(eventToUpdate));
     }
 

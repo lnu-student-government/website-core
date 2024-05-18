@@ -1,6 +1,7 @@
 package org.sglnu.eventservice.common;
 
 public enum EventRegistrationStatus {
-    APPROVED, PENDING, REJECTED
+
+    SUBSCRIBED, PENDING, REJECTED, UNSUBSCRIBED
 
 }
