@@ -27,7 +27,7 @@ public interface ErrorDetailMapper {
 
     @Mapping(target = "cause", expression = "java(\"id\")")
     @Mapping(target = "message", expression = "java(\"Event of id=[%s] is not found\"" +
-            ".formatted(ex.getUserId(), ex.getEventId()))")
+            ".formatted(ex.getEventId()))")
     ErrorDetail from(EventNotFoundException ex);
 
 }
