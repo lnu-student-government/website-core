@@ -67,23 +67,23 @@ public class UserEventService {
                 .build();
     }
 
+    private Integer getParticipantsCount(Event event){
+        return event.getUserEvents().size();
+    }
+
     private EventRegistrationStatus getSubscriptionStatus(Event event) {
-        return (event.getIsPaid() || Optional.ofNullable(event.getMaxParticipants()).orElse(0) > 0) ? PENDING : SUBSCRIBED;
+        if (event.getIsPaid()) {
+            return PENDING;
+        }
+
+        if (event.getMaxParticipants() != null) {
+            if (getParticipantsCount(event) < event.getMaxParticipants()) {
+                return SUBSCRIBED;
+            } else {
+                return REJECTED;              }
+        }
+
+        return SUBSCRIBED;
     }
 
-    @Transactional
-    public SubscriptionResponse rejectParticipant(Long eventId, Long userId) {
-        UserEvent userEvent = userEventRepository.findByUserIdAndEventId(userId, eventId)
-                .orElseThrow(() -> new UserIsNotSubscribedToEvent("User is not subscribed to this event", userId, eventId));
-
-        userEvent.setStatus(REJECTED);
-
-        userEventRepository.save(userEvent);
-
-        return SubscriptionResponse.builder()
-                .eventId(eventId)
-                .userId(userId)
-                .status(REJECTED)
-                .build();
-    }
 }
