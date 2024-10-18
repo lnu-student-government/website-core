@@ -15,14 +15,14 @@ spring:
       ddl-auto: validate
   flyway:
     default-schema: media-service
-  cloud:
-    azure:
-      storage:
-        blob:
-          accountName: ${AZURE_BLOB_NAME}
-          accountKey: ${AZURE_BLOB_KEY}
-          endpoint: ${AZURE_BLOB_ENDPOINT}
-          containerName: ${AZURE_BLOB_CONTAINER_NAME}
+#  cloud:
+#    azure:
+#      storage:
+#        blob:
+#          accountName: ${AZURE_BLOB_NAME}
+#          accountKey: ${AZURE_BLOB_KEY}
+#          endpoint: ${AZURE_BLOB_ENDPOINT}
+#          containerName: ${AZURE_BLOB_CONTAINER_NAME}
 cloud:
   blob:
     sas:

@@ -7,7 +7,7 @@ spring:
   profiles:
     active:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:6969/coredb}
+    url: ${DB_URL:jdbc:postgresql://localhost:6969/coredb?currentSchema=event-service}
     username: ${DB_USER:root}
     password: ${DB_PASSWORD:root}
   jpa:

@@ -11,6 +11,10 @@ eureka:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   server:
     enableSelfPreservation: false
+logging:
+  level:
+    com.netflix: DEBUG
+    org.springframework.cloud: DEBUG
 
 spring:
   application:
