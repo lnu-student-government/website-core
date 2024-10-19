@@ -1,6 +1,5 @@
 server:
   port: ${PORT:9000}
-
 spring:
   application:
     name: user-service
@@ -32,3 +31,6 @@ eureka:
     fetchRegistry: true
   instance:
     preferIpAddress: true
+springdoc:
+  api-docs:
+    path: /api-docs
